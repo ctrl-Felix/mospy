@@ -7,13 +7,7 @@ class Transaction:
     name = "transfer"  # Name to reference this transaction type
     _type_url = "/cosmos.bank.v1beta1.MsgSend"
 
-    def __init__(
-            self,
-            sender: Account,
-            receipient: str,
-            amount: int,
-            denom: str
-    ):
+    def __init__(self, sender: Account, receipient: str, amount: int, denom: str):
         _tx_coin = coin.Coin()
         _tx_coin.denom = denom
         _tx_coin.amount = str(amount)
@@ -28,7 +22,4 @@ class Transaction:
         )
         msg.amount.append(self._amount)
 
-        return (
-            self._type_url,
-            msg
-        )
+        return (self._type_url, msg)
