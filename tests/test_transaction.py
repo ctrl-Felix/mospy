@@ -1,5 +1,4 @@
 from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
-
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
