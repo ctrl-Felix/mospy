@@ -6,19 +6,41 @@ from mospy.utils import privkey_to_address, seed_to_private_key, privkey_to_pubk
 
 
 class Account:
+    """
+    The account class can be instantiated through a seed or a private key. If nothing is provided it will create a new keyring and the params to work with the cosmos chain
+
+    Note:
+        * You can't provide a ``seed_phrase`` and a``private_key``
+        * A ``readble`` method behaves is the getter for a Attribute
+        * A ``writable`` method is the setter for the Attribute
+        * A method can be setter and getter at the same time. The Parameters description always refers to the setter while the Returns section belongs to the getter
+
+
+    Args:
+        seed_phrase (str): Seed phrase to derive private keys from
+        private_key (str): Private key to instantiate the Account
+        next_sequence (int): Sequence which will be used for transactions signed with this Account
+        account_number (int): On-chain account number
+        slip44 (int): Slip44 value
+        hrp (str): Address Prefix
+        address_index (int): Address index to get sub accounts for seed phrases (doesn't work when using a private key)
+
+    """
+    address: str
+    """the address of the account derived by using the slip44 param, the hrp and the address_index"""
+
     _RAW_DERIVATION_PATH = "m/44'/{slip44}'/0'/0/{address_index}"
-    _DEFAULT_BECH32_HRP = "cosmos"
-    _DEFAULT_ADDRESS_INDEX = 0
+
 
     def __init__(
             self,
             seed_phrase: str = None,
             private_key: str = None,
-            slip44: int = 118,
-            hrp: str = _DEFAULT_BECH32_HRP,
-            address_index: int = _DEFAULT_ADDRESS_INDEX,
             next_sequence: int = None,
-            account_number: int = None
+            account_number: int = None,
+            slip44: int = 118,
+            hrp: str = "cosmos",
+            address_index: int = 0
 
     ):
         self._slip44 = slip44
@@ -47,46 +69,137 @@ class Account:
         params = {"slip44": self._slip44, "address_index": adr_id}
         return self._RAW_DERIVATION_PATH.format(**params)
 
-    def address(self, hrp: str = None, address_index: int = None) -> str:
-        if not self._seed_phrase and address_index: # The address_index flag is only working if a seed is provided
-            raise Exception("This is only possible when the account has been initialised through a seed")
+    @property
+    def address(self) -> str:
+        """
+        Current address which depends on the hrp and the private key
 
-        adr_prefix = self._hrp if not hrp else hrp
-        adr_id = self._address_index if not address_index else address_index
-        if adr_id == 0:
-            address = privkey_to_address(self._private_key, hrp=adr_prefix)
+        Returns:
+            Private Key
+        """
+        if not self._seed_phrase:
+            address = privkey_to_address(self._private_key, hrp=self._hrp)
         else:
-            sub_private_key = seed_to_private_key(self._seed_phrase, self._derivation_path(address_index=adr_id))
-            address = privkey_to_address(sub_private_key, hrp=adr_prefix)
+            sub_private_key = seed_to_private_key(self._seed_phrase,
+                                                  self._derivation_path(address_index=self._address_index))
+            address = privkey_to_address(sub_private_key, hrp=self._hrp)
 
         return address
 
-    def private_key(self, address_index: int = None) -> bytes:
-        adr_id = self._address_index if not address_index else address_index
+    @property
+    def private_key(self) -> bytes:
+        """
+        Current private key which depends on the slip 44 param and the address index if the account is instantiated through a seed.
+
+        Returns:
+            Private Key
+        """
         if self._seed_phrase:
-            private_key = seed_to_private_key(self._seed_phrase, self._derivation_path(address_index=adr_id))
+            private_key = seed_to_private_key(self._seed_phrase,
+                                              self._derivation_path(address_index=self._address_index))
             return private_key
         else:
             return self._private_key
 
-    def set_address_index(self, address_index: int) -> None:
-        """Change the address index to use a sub account. This works only if a seed is used"""
+    @property
+    def public_key(self) -> keys.PubKey:
+        """
+            Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.
+
+            Returns:
+                Public Key
+        """
+        pubkey_bytes = privkey_to_pubkey(self.private_key)
+        _pubkey = keys.PubKey()
+        _pubkey.key = pubkey_bytes
+        return _pubkey
+
+    @property
+    def account_number(self) -> int:
+        """
+        On-chain account number which will be assigned when the address receives coins for the first time.
+
+        Returns:
+            Account number
+        """
+        return self._account_number
+
+    @property
+    def next_sequence(self) -> int:
+        """
+        Sequence which will be used for transactions signed with this Account.
+
+        Args:
+            next_sequence (int): Next sequence (only when used as setter)
+
+        Returns:
+            Next Sequence
+        """
+        return self._next_sequence
+
+    @next_sequence.setter
+    def set_next_sequence(self, next_sequence):
+        self._next_sequence = next_sequence
+
+
+    def increase_sequence(self, change: int = 1) -> None:
+        """
+        Increase the sequence by ``change``
+
+        Args:
+            change (int): Value to increase the sequence
+        """
+        self._next_sequence += change
+
+    @property
+    def address_index(self):
+        """
+        Change the address index to use a sub account. This works only if a seed has been used to instantiate the Account.
+
+        Args:
+            address_index (int): New address index
+
+        Returns:
+            Address Index
+        """
+        return self._address_index
+
+    @address_index.setter
+    def address_index(self, address_index: int) -> None:
+
         if self._seed_phrase:
             self._DEFAULT_ADDRESS_INDEX = address_index
         else:
             raise ValueError("Can't the change the address index without provided seed")
 
-    def pub_key(self) -> keys.PubKey:
-        pubkey_bytes = privkey_to_pubkey(self._private_key)
-        _pubkey = keys.PubKey()
-        _pubkey.key = pubkey_bytes
-        return _pubkey
+    @property
+    def hrp(self) -> str:
+        """
+        Current address prefix used by the Account.
 
-    def account_number(self):
-        return self._account_number
+        Returns:
+            Address Prefix (hrp)
+        """
+        return self._hrp
 
-    def next_sequence(self):
-        return self._next_sequence
+    @hrp.setter
+    def hrp(self, hrp: str) -> None:
+        self._hrp = hrp
 
-    def increase_sequence(self, amount: int = 1):
-        self._next_sequence += amount
+    @property
+    def slip44(self, slip44: int) -> None:
+        """
+        Current slip44 value
+
+        Args:
+            slip44 (int): New slip44 value as defined in the [slip44 registry](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
+
+        Returns:
+            Slip44
+
+        """
+        return self._slip44
+
+    @slip44.setter
+    def set_slip44(self, slip44: int) -> None:
+        self._slip44 = slip44

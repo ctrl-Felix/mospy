@@ -1,0 +1,9 @@
+site_name: MosPy Docs
+plugins:
+  - search
+  - mkdocstrings:
+      watch:
+        - src/mospy
+
+theme:
+  name: "material"

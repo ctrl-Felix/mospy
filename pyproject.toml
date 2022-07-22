@@ -18,6 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "protobuf",
+    "mkdocstrings[python]>=0.18"
 ]
 dynamic = []
 
