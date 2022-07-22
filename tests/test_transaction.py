@@ -16,7 +16,6 @@ class TestTransactionClass:
             next_sequence=1
         )
 
-        print(account.address())
 
         fee = Coin(
             denom="uatom",

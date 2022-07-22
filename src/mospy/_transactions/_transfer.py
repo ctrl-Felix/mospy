@@ -18,7 +18,7 @@ class Transaction:
         _tx_coin.denom = denom
         _tx_coin.amount = str(amount)
         self._amount = _tx_coin
-        self._sender = sender.address()
+        self._sender = sender.address
         self._receipient = receipient
 
     def format(self) -> (str, tx.MsgSend):

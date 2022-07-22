@@ -19,7 +19,7 @@ class Transaction:
         self._denom_in = denom_in
         self._min_amount_out = str(min_amount_out)
 
-        self._sender = sender.address()
+        self._sender = sender.address
         self._receipient = receipient
         self._routes = routes
 
