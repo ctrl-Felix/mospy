@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mospy"
+version = "0.0.1"
+description = "This package is a fork of cosmospy and is a light framework for the cosmos ecosystem"
+authors = [
+    { name = "ctrl-felix", email = "dev@ctrl-felix.de" },
+]
+readme = "README.md"
+keywords = ["cosmospy", "mospy", "cosmos"]
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "protobuf",
+]
+dynamic = []
+
+[project.urls]
+"Homepage" = "https://github.com/ctrl-Felix/mospy/"
+"Bug Tracker" = "https://github.com/ctrl-Felix/mospy/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mospy"]
