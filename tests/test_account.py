@@ -5,16 +5,23 @@ class TestAccountClass:
 
     def test_wallet_creation_with_seed(self):
         account = Account(
-            seed_phrase=self.seed_phrase
+            seed_phrase=self.seed_phrase,
+            hrp="osmo"
         )
 
-        assert account.address() == "cosmos1qecn0ujp4rw8hn93l9jpsxyw4fa28a5237a4px"
+        assert account.address() == "osmo1qecn0ujp4rw8hn93l9jpsxyw4fa28a52e9w9h5"
 
     def test_wallet_sub_account(self):
         account = Account(
             seed_phrase=self.seed_phrase,
-            address_index=2
+            address_index=2,
+            next_sequence=1
         )
-
         assert account.address() == "cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9"
+
+        account.increase_sequence(5)
+
+        assert account.next_sequence() == 6
+
+
 

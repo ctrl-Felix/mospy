@@ -17,14 +17,14 @@ class Account:
             slip44: int = 118,
             hrp: str = _DEFAULT_BECH32_HRP,
             address_index: int = _DEFAULT_ADDRESS_INDEX,
-            sequence: int = None,
+            next_sequence: int = None,
             account_number: int = None
 
     ):
         self._slip44 = slip44
-        self._BECH32_HRP = hrp
-        self._ADDRESS_INDEX = address_index
-        self._sequence = sequence
+        self._hrp = hrp
+        self._address_index = address_index
+        self._next_sequence = next_sequence
         self._account_number = account_number
 
         if not seed_phrase and not private_key:
@@ -43,7 +43,7 @@ class Account:
             raise AttributeError("Please set only a private key or a seed phrase. Not both!")
 
     def _derivation_path(self, address_index: int = None):
-        adr_id = self._ADDRESS_INDEX if not address_index else address_index
+        adr_id = self._address_index if not address_index else address_index
         params = {"slip44": self._slip44, "address_index": adr_id}
         return self._RAW_DERIVATION_PATH.format(**params)
 
@@ -51,8 +51,8 @@ class Account:
         if not self._seed_phrase and address_index: # The address_index flag is only working if a seed is provided
             raise Exception("This is only possible when the account has been initialised through a seed")
 
-        adr_prefix = self._BECH32_HRP if not hrp else hrp
-        adr_id = self._ADDRESS_INDEX if not address_index else address_index
+        adr_prefix = self._hrp if not hrp else hrp
+        adr_id = self._address_index if not address_index else address_index
         if adr_id == 0:
             address = privkey_to_address(self._private_key, hrp=adr_prefix)
         else:
@@ -62,7 +62,7 @@ class Account:
         return address
 
     def private_key(self, address_index: int = None) -> bytes:
-        adr_id = self._ADDRESS_INDEX if not address_index else address_index
+        adr_id = self._address_index if not address_index else address_index
         if self._seed_phrase:
             private_key = seed_to_private_key(self._seed_phrase, self._derivation_path(address_index=adr_id))
             return private_key
@@ -86,8 +86,7 @@ class Account:
         return self._account_number
 
     def next_sequence(self):
-        next_seg = self._sequence + 1
-        return next_seg
+        return self._next_sequence
 
     def increase_sequence(self, amount: int = 1):
-        self._sequence += amount
+        self._next_sequence += amount

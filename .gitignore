@@ -1,4 +1,12 @@
+# Jetbrains
 .idea
+main.py
+
+
+# Testing
+.coverage
+junit
 .pytest_cache
 
-main.py
+# Venv
+venv

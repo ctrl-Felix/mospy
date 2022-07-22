@@ -14,7 +14,8 @@ from mospy._transactions import ALL_TRANSACTION_HELPERS
 built_in_transactions = {}
 for transaction_adapter in ALL_TRANSACTION_HELPERS:
     module = importlib.import_module("mospy._transactions." + transaction_adapter)
-    built_in_transactions[transaction_adapter] = getattr(module, 'Transaction')
+    adapter = getattr(module, 'Transaction')
+    built_in_transactions[adapter.name] = adapter
 
 
 class Transaction:

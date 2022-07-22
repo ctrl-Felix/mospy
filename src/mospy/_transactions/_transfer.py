@@ -4,6 +4,7 @@ import cosmospy_protobuf.cosmos.bank.v1beta1.tx_pb2 as tx
 
 
 class Transaction:
+    name = "transfer"  # Name to reference this transaction type
     _type_url = "/cosmos.bank.v1beta1.MsgSend"
 
     def __init__(

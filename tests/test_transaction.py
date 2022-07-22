@@ -13,7 +13,7 @@ class TestTransactionClass:
         account = Account(
             seed_phrase="law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style",
             account_number=1,
-            sequence=0
+            next_sequence=1
         )
 
         print(account.address())

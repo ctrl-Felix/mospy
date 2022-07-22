@@ -3,6 +3,7 @@ import cosmospy_protobuf.osmosis.gamm.v1beta1.tx_pb2 as tx
 
 
 class Transaction:
+    name = "swap_exact_amount_in"
     _type_url = "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn"
 
     def __init__(
