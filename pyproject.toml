@@ -18,11 +18,12 @@ classifiers = [
 ]
 dependencies = [
     "protobuf==4.21.3",
-    "mkdocstrings[python]>=0.18",
     "httpx==0.23.0",
     "cosmospy-protobuf==0.0.1",
     "ecdsa==0.17.0",
-    "bech32==1.2.0"
+    "bech32==1.2.0",
+    "mnemonic==0.20",
+    "hdwallets==0.1.2"
 ]
 dynamic = []
 

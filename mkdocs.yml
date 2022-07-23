@@ -6,10 +6,12 @@ plugins:
         - src/mospy
 
 nav:
-  - "index.md"
+  - Overview: "index.md"
   - "account.md"
   - "transaction.md"
-  - 'clients\index.md'
-
+  - Clients:
+      - Overview: 'clients\index.md'
+      - HTTPClient: 'clients\httpclient.md'
+  - 'examples.md'
 theme:
   name: "material"
