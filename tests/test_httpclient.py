@@ -10,7 +10,9 @@ class TestHTTPClientClass:
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = HTTPClient()
+        client = HTTPClient(
+            api='https://api.cosmos.interbloc.org'
+        )
 
         client.load_account_data(account)
 
@@ -25,7 +27,9 @@ class TestHTTPClientClass:
             next_sequence=0,
         )
 
-        client = HTTPClient()
+        client = HTTPClient(
+            api='https://api.cosmos.interbloc.org'
+        )
 
         fee = Coin(denom="uatom", amount="1000")
 
