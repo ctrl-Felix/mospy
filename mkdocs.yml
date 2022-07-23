@@ -5,5 +5,11 @@ plugins:
       watch:
         - src/mospy
 
+nav:
+  - "index.md"
+  - "account.md"
+  - "transaction.md"
+  - 'clients\index.md'
+
 theme:
   name: "material"

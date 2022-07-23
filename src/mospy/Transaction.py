@@ -2,19 +2,18 @@ import base64
 import hashlib
 import importlib
 
-import ecdsa
-
-from mospy.Account import Account
-
 import cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 as coin
 import cosmospy_protobuf.cosmos.tx.v1beta1.tx_pb2 as tx
+import ecdsa
 from google.protobuf import any_pb2 as any
 from mospy._transactions import ALL_TRANSACTION_HELPERS
+from mospy.Account import Account
 
 built_in_transactions = {}
 for transaction_adapter in ALL_TRANSACTION_HELPERS:
-    module = importlib.import_module("mospy._transactions." + transaction_adapter)
-    adapter = getattr(module, 'Transaction')
+    module = importlib.import_module("mospy._transactions." +
+                                     transaction_adapter)
+    adapter = getattr(module, "Transaction")
     built_in_transactions[adapter.name] = adapter
 
 
@@ -30,13 +29,13 @@ class Transaction:
     """
 
     def __init__(
-            self,
-            *,
-            account: Account,
-            gas: int,
-            fee: coin = None,
-            memo: str = "",
-            chain_id: str = "cosmoshub-4",
+        self,
+        *,
+        account: Account,
+        gas: int,
+        fee: coin = None,
+        memo: str = "",
+        chain_id: str = "cosmoshub-4",
     ) -> None:
 
         self._account = account
@@ -79,10 +78,7 @@ class Transaction:
             amount: Amount
             denom: Denom
         """
-        self._fee = coin.Coin(
-            amount=str(amount),
-            denom=denom
-        )
+        self._fee = coin.Coin(amount=str(amount), denom=denom)
 
     def get_tx_bytes(self) -> str:
         """Sign the transaction and get the tx bytes which can be then used to broadcast the transaction to the network.
@@ -91,7 +87,8 @@ class Transaction:
             tx_bytes (str): Transaction bytes
         """
         self._tx_raw.body_bytes = self._tx_body.SerializeToString()
-        self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString()
+        self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString(
+        )
         self._tx_raw.signatures.append(self._get_signatures())
         raw_tx = self._tx_raw.SerializeToString()
         tx_bytes = bytes(raw_tx)
@@ -99,7 +96,8 @@ class Transaction:
         return tx_b64
 
     def _get_signatures(self):
-        privkey = ecdsa.SigningKey.from_string(self._account.private_key, curve=ecdsa.SECP256k1)
+        privkey = ecdsa.SigningKey.from_string(self._account.private_key,
+                                               curve=ecdsa.SECP256k1)
         signature_compact = privkey.sign_deterministic(
             self._get_sign_doc().SerializeToString(),
             hashfunc=hashlib.sha256,
