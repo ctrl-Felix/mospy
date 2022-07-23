@@ -10,7 +10,8 @@ class TestTransactionClass:
 
     def test_transaction_creation(self):
         account = Account(
-            seed_phrase="law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style",
+            seed_phrase=
+            "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style",
             account_number=1,
             next_sequence=1,
         )
