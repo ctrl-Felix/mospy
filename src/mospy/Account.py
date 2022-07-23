@@ -50,16 +50,15 @@ class Account:
         self._account_number = account_number
 
         if not seed_phrase and not private_key:
-            self._seed_phrase = Mnemonic(language="english").generate(strength=256)
-            self._private_key = seed_to_private_key(
-                seed_phrase, self._derivation_path()
-            )
+            self._seed_phrase = Mnemonic(language="english").generate(
+                strength=256)
+            self._private_key = seed_to_private_key(seed_phrase,
+                                                    self._derivation_path())
 
         elif seed_phrase and not private_key:
             self._seed_phrase = seed_phrase
-            self._private_key = seed_to_private_key(
-                seed_phrase, self._derivation_path()
-            )
+            self._private_key = seed_to_private_key(seed_phrase,
+                                                    self._derivation_path())
 
         elif private_key and not seed_phrase:
             self._seed_phrase = None
@@ -67,8 +66,7 @@ class Account:
 
         else:
             raise AttributeError(
-                "Please set only a private key or a seed phrase. Not both!"
-            )
+                "Please set only a private key or a seed phrase. Not both!")
 
     def _derivation_path(self, address_index: int = None):
         adr_id = self._address_index if not address_index else address_index
@@ -179,7 +177,8 @@ class Account:
         if self._seed_phrase:
             self._DEFAULT_ADDRESS_INDEX = address_index
         else:
-            raise ValueError("Can't the change the address index without provided seed")
+            raise ValueError(
+                "Can't the change the address index without provided seed")
 
     @property
     def hrp(self) -> str:
