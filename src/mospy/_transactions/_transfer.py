@@ -1,6 +1,5 @@
 import cosmospy_protobuf.cosmos.bank.v1beta1.tx_pb2 as tx
 import cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 as coin
-
 from mospy.Account import Account
 
 
