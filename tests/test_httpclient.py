@@ -8,9 +8,7 @@ class TestHTTPClientClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
 
     def test_account_data_loading(self):
-        account = Account(
-            seed_phrase=self.seed_phrase
-        )
+        account = Account(seed_phrase=self.seed_phrase)
 
         client = HTTPClient()
 
@@ -25,15 +23,11 @@ class TestHTTPClientClass:
             seed_phrase=self.seed_phrase,
             account_number=1,
             next_sequence=0,
-
         )
 
         client = HTTPClient()
 
-        fee = Coin(
-            denom="uatom",
-            amount="1000"
-        )
+        fee = Coin(denom="uatom", amount="1000")
 
         tx = Transaction(
             account=account,
@@ -42,13 +36,16 @@ class TestHTTPClientClass:
         )
 
         tx.add_msg(
-            tx_type='transfer',
+            tx_type="transfer",
             sender=account,
             receipient="cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9",
             amount=1000,
-            denom="uatom"
+            denom="uatom",
         )
 
         tx_data = client.broadcast_transaction(transaction=tx)
 
-        assert tx_data[0] == "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+        assert (
+            tx_data[0]
+            == "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+        )

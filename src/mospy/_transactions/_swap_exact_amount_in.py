@@ -7,13 +7,13 @@ class Transaction:
     _type_url = "/osmosis.gamm.v1beta1.MsgSwapExactAmountIn"
 
     def __init__(
-            self,
-            sender: Account,
-            receipient: str,
-            denom_in: str,
-            amount_in: int,
-            min_amount_out: int,
-            routes: list
+        self,
+        sender: Account,
+        receipient: str,
+        denom_in: str,
+        amount_in: int,
+        min_amount_out: int,
+        routes: list,
     ):
         self._amount_in = str(amount_in)
         self._denom_in = denom_in
@@ -35,7 +35,4 @@ class Transaction:
         msg.tokenIn.amount = self._amount_in
         msg.tokenOutMinAmount = self._min_amount_out
 
-        return (
-            self._type_url,
-            msg
-        )
+        return (self._type_url, msg)

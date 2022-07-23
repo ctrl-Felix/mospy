@@ -14,13 +14,10 @@ class TestTransactionClass:
         account = Account(
             seed_phrase="law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style",
             account_number=1,
-            next_sequence=1
+            next_sequence=1,
         )
 
-        fee = Coin(
-            denom="uatom",
-            amount="1000"
-        )
+        fee = Coin(denom="uatom", amount="1000")
 
         tx = Transaction(
             account=account,
@@ -29,11 +26,11 @@ class TestTransactionClass:
         )
 
         tx.add_msg(
-            tx_type='transfer',
+            tx_type="transfer",
             sender=account,
             receipient="cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9",
             amount=1000,
-            denom="uatom"
+            denom="uatom",
         )
 
         tx_bytes = tx.get_tx_bytes()
