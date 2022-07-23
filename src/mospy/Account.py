@@ -26,21 +26,21 @@ class Account:
         address_index (int): Address index to get sub accounts for seed phrases (doesn't work when using a private key)
 
     """
+
     address: str
     """the address of the account derived by using the slip44 param, the hrp and the address_index"""
 
     _RAW_DERIVATION_PATH = "m/44'/{slip44}'/0'/0/{address_index}"
 
     def __init__(
-            self,
-            seed_phrase: str = None,
-            private_key: str = None,
-            next_sequence: int = None,
-            account_number: int = None,
-            slip44: int = 118,
-            hrp: str = "cosmos",
-            address_index: int = 0
-
+        self,
+        seed_phrase: str = None,
+        private_key: str = None,
+        next_sequence: int = None,
+        account_number: int = None,
+        slip44: int = 118,
+        hrp: str = "cosmos",
+        address_index: int = 0,
     ):
         self._slip44 = slip44
         self._hrp = hrp
@@ -49,15 +49,16 @@ class Account:
         self._account_number = account_number
 
         if not seed_phrase and not private_key:
-            self._seed_phrase = Mnemonic(
-                language="english").generate(strength=256)
+            self._seed_phrase = Mnemonic(language="english").generate(strength=256)
             self._private_key = seed_to_private_key(
-                seed_phrase, self._derivation_path())
+                seed_phrase, self._derivation_path()
+            )
 
         elif seed_phrase and not private_key:
             self._seed_phrase = seed_phrase
             self._private_key = seed_to_private_key(
-                seed_phrase, self._derivation_path())
+                seed_phrase, self._derivation_path()
+            )
 
         elif private_key and not seed_phrase:
             self._seed_phrase = None
@@ -65,7 +66,8 @@ class Account:
 
         else:
             raise AttributeError(
-                "Please set only a private key or a seed phrase. Not both!")
+                "Please set only a private key or a seed phrase. Not both!"
+            )
 
     def _derivation_path(self, address_index: int = None):
         adr_id = self._address_index if not address_index else address_index
@@ -83,8 +85,10 @@ class Account:
         if not self._seed_phrase:
             address = privkey_to_address(self._private_key, hrp=self._hrp)
         else:
-            sub_private_key = seed_to_private_key(self._seed_phrase,
-                                                  self._derivation_path(address_index=self._address_index))
+            sub_private_key = seed_to_private_key(
+                self._seed_phrase,
+                self._derivation_path(address_index=self._address_index),
+            )
             address = privkey_to_address(sub_private_key, hrp=self._hrp)
 
         return address
@@ -98,8 +102,10 @@ class Account:
             Private Key
         """
         if self._seed_phrase:
-            private_key = seed_to_private_key(self._seed_phrase,
-                                              self._derivation_path(address_index=self._address_index))
+            private_key = seed_to_private_key(
+                self._seed_phrase,
+                self._derivation_path(address_index=self._address_index),
+            )
             return private_key
         else:
             return self._private_key
@@ -107,10 +113,10 @@ class Account:
     @property
     def public_key(self) -> keys.PubKey:
         """
-            Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.
+        Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.
 
-            Returns:
-                Public Key
+        Returns:
+            Public Key
         """
         pubkey_bytes = privkey_to_pubkey(self.private_key)
         _pubkey = keys.PubKey()
@@ -172,8 +178,7 @@ class Account:
         if self._seed_phrase:
             self._DEFAULT_ADDRESS_INDEX = address_index
         else:
-            raise ValueError(
-                "Can't the change the address index without provided seed")
+            raise ValueError("Can't the change the address index without provided seed")
 
     @property
     def hrp(self) -> str:
