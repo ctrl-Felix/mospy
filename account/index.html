@@ -318,6 +318,21 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clients/" class="md-nav__link">
+        Clients
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -441,8 +456,8 @@
   <summary>Note</summary>
   <ul>
 <li>You can't provide a <code>seed_phrase</code> and a<code>private_key</code></li>
-<li>A <code>readble</code> method behaves is the getter for a Attribute</li>
-<li>A <code>writable</code> method is the setter for the Attribute</li>
+<li>A <code>readble</code> method behaves is the getter for a Attribute (Example: <code>hrp = account.hrp</code>)</li>
+<li>A <code>writable</code> method is the setter for the Attribute (Example: <code>account.hrp = "cosmos"</code>)</li>
 <li>A method can be setter and getter at the same time. The Parameters description always refers to the setter while the Returns section belongs to the getter</li>
 </ul>
 </details>
@@ -533,8 +548,7 @@
 
         <details class="quote">
           <summary>Source code in <code>mospy\Account.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  8</span>
-<span class="normal">  9</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  9</span>
 <span class="normal"> 10</span>
 <span class="normal"> 11</span>
 <span class="normal"> 12</span>
@@ -730,14 +744,28 @@
 <span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
-<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Account</span><span class="p">:</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Account</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The account class can be instantiated through a seed or a private key. If nothing is provided it will create a new keyring and the params to work with the cosmos chain</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        * You can&#39;t provide a ``seed_phrase`` and a``private_key``</span>
-<span class="sd">        * A ``readble`` method behaves is the getter for a Attribute</span>
-<span class="sd">        * A ``writable`` method is the setter for the Attribute</span>
+<span class="sd">        * A ``readble`` method behaves is the getter for a Attribute (Example: ``hrp = account.hrp``)</span>
+<span class="sd">        * A ``writable`` method is the setter for the Attribute (Example: ``account.hrp = &quot;cosmos&quot;``)</span>
 <span class="sd">        * A method can be setter and getter at the same time. The Parameters description always refers to the setter while the Returns section belongs to the getter</span>
 
 
@@ -751,22 +779,21 @@
 <span class="sd">        address_index (int): Address index to get sub accounts for seed phrases (doesn&#39;t work when using a private key)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">address</span><span class="p">:</span> <span class="nb">str</span>
     <span class="sd">&quot;&quot;&quot;the address of the account derived by using the slip44 param, the hrp and the address_index&quot;&quot;&quot;</span>
 
     <span class="n">_RAW_DERIVATION_PATH</span> <span class="o">=</span> <span class="s2">&quot;m/44&#39;/</span><span class="si">{slip44}</span><span class="s2">&#39;/0&#39;/0/</span><span class="si">{address_index}</span><span class="s2">&quot;</span>
 
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">seed_phrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">next_sequence</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">account_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">slip44</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
-            <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosmos&quot;</span><span class="p">,</span>
-            <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seed_phrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">private_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">next_sequence</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">account_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">slip44</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
+        <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosmos&quot;</span><span class="p">,</span>
+        <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_slip44</span> <span class="o">=</span> <span class="n">slip44</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hrp</span> <span class="o">=</span> <span class="n">hrp</span>
@@ -775,19 +802,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_account_number</span> <span class="o">=</span> <span class="n">account_number</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">seed_phrase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">private_key</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">strength</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="n">seed_phrase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+                <span class="n">strength</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="n">seed_phrase</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">())</span>
 
         <span class="k">elif</span> <span class="n">seed_phrase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">private_key</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span> <span class="o">=</span> <span class="n">seed_phrase</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="n">seed_phrase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="n">seed_phrase</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">())</span>
 
         <span class="k">elif</span> <span class="n">private_key</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">seed_phrase</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Please set only a private key or a seed phrase. Not both!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;Please set only a private key or a seed phrase. Not both!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_derivation_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">adr_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">address_index</span> <span class="k">else</span> <span class="n">address_index</span>
@@ -805,8 +836,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">:</span>
             <span class="n">address</span> <span class="o">=</span> <span class="n">privkey_to_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span><span class="p">,</span> <span class="n">hrp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hrp</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">sub_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
-                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">))</span>
+            <span class="n">sub_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">),</span>
+            <span class="p">)</span>
             <span class="n">address</span> <span class="o">=</span> <span class="n">privkey_to_address</span><span class="p">(</span><span class="n">sub_private_key</span><span class="p">,</span> <span class="n">hrp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hrp</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">address</span>
@@ -820,8 +853,10 @@
 <span class="sd">            Private Key</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">:</span>
-            <span class="n">private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
-                                              <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">))</span>
+            <span class="n">private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">),</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="n">private_key</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span>
@@ -829,10 +864,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keys</span><span class="o">.</span><span class="n">PubKey</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.</span>
+<span class="sd">        Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.</span>
 
-<span class="sd">            Returns:</span>
-<span class="sd">                Public Key</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Public Key</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pubkey_bytes</span> <span class="o">=</span> <span class="n">privkey_to_pubkey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">private_key</span><span class="p">)</span>
         <span class="n">_pubkey</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">PubKey</span><span class="p">()</span>
@@ -844,10 +879,16 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        On-chain account number which will be assigned when the address receives coins for the first time.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            account_number (int): Account Number</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Account number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_account_number</span>
+
+    <span class="nd">@account_number</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">account_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_account_number</span> <span class="o">=</span> <span class="n">account_number</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">next_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -863,9 +904,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_sequence</span>
 
     <span class="nd">@next_sequence</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">set_next_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_sequence</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">next_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_sequence</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_sequence</span> <span class="o">=</span> <span class="n">next_sequence</span>
-
 
     <span class="k">def</span> <span class="nf">increase_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -895,7 +935,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_DEFAULT_ADDRESS_INDEX</span> <span class="o">=</span> <span class="n">address_index</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t the change the address index without provided seed&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Can&#39;t the change the address index without provided seed&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hrp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -951,6 +992,7 @@
 <code class="highlight language-python"><span class="n">account_number</span><span class="p">()</span></code>
   
   <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
@@ -960,6 +1002,30 @@
   <div class="doc doc-contents ">
   
       <p>On-chain account number which will be assigned when the address receives coins for the first time.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>account_number</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>Account Number</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -981,19 +1047,23 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">account_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    On-chain account number which will be assigned when the address receives coins for the first time.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        account_number (int): Account Number</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Account number</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1042,11 +1112,7 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
@@ -1057,7 +1123,13 @@
 <span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Current address which depends on the hrp and the private key</span>
@@ -1068,8 +1140,10 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">:</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">privkey_to_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span><span class="p">,</span> <span class="n">hrp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hrp</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sub_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
-                                              <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">))</span>
+        <span class="n">sub_private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">),</span>
+        <span class="p">)</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">privkey_to_address</span><span class="p">(</span><span class="n">sub_private_key</span><span class="p">,</span> <span class="n">hrp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hrp</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">address</span>
@@ -1141,18 +1215,18 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">address_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Change the address index to use a sub account. This works only if a seed has been used to instantiate the Account.</span>
@@ -1209,15 +1283,15 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">hrp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Current address prefix used by the Account.</span>
@@ -1272,14 +1346,14 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">increase_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">increase_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increase the sequence by ``change``</span>
 
@@ -1356,18 +1430,18 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">next_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sequence which will be used for transactions signed with this Account.</span>
@@ -1423,20 +1497,22 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
 <span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">private_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Current private key which depends on the slip 44 param and the address index if the account is instantiated through a seed.</span>
@@ -1445,8 +1521,10 @@
 <span class="sd">        Private Key</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">:</span>
-        <span class="n">private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">))</span>
+        <span class="n">private_key</span> <span class="o">=</span> <span class="n">seed_to_private_key</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_derivation_path</span><span class="p">(</span><span class="n">address_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span><span class="p">),</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">private_key</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_private_key</span>
@@ -1494,24 +1572,24 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keys</span><span class="o">.</span><span class="n">PubKey</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.</span>
+<span class="sd">    Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Public Key</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Public Key</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pubkey_bytes</span> <span class="o">=</span> <span class="n">privkey_to_pubkey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">private_key</span><span class="p">)</span>
     <span class="n">_pubkey</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">PubKey</span><span class="p">()</span>
@@ -1586,19 +1664,19 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy\Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
 <span class="k">def</span> <span class="nf">slip44</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slip44</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Current slip44 value</span>
