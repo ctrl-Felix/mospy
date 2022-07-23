@@ -3,6 +3,7 @@ from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
 from mospy import Account, Transaction
 from mospy.clients import HTTPClient
 
+
 class TestHTTPClientClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
 

@@ -3,6 +3,7 @@ from mospy.Transaction import Transaction
 
 import httpx
 
+
 class HTTPClient:
     """
     Wrapper class to interact with a cosmos chain through their API endpoint
@@ -10,6 +11,7 @@ class HTTPClient:
     Args:
         api (str): URL to a Cosmos api node
     """
+
     def __init__(
             self,
             *,
@@ -38,7 +40,6 @@ class HTTPClient:
         account.next_sequence = sequence
         account.account_number = account_number
 
-
     def broadcast_transaction(self, *, transaction: Transaction, timeout: int = 10) -> [str, str]:
         """
         Sign and broadcast a transaction.
@@ -57,8 +58,8 @@ class HTTPClient:
         url = self._api + "/cosmos/tx/v1beta1/txs"
         tx_bytes = transaction.get_tx_bytes()
         pushable_tx = {
-                "tx_bytes": tx_bytes,
-                "mode": "BROADCAST_MODE_SYNC"
+            "tx_bytes": tx_bytes,
+            "mode": "BROADCAST_MODE_SYNC"
         }
 
         req = httpx.post(url, json=pushable_tx, timeout=timeout)
@@ -72,5 +73,3 @@ class HTTPClient:
         log = None if code == 0 else data['tx_response']['raw_log']
 
         return [hash, log]
-
-
