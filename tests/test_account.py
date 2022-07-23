@@ -10,9 +10,9 @@ class TestAccountClass:
         assert account.address == "osmo1qecn0ujp4rw8hn93l9jpsxyw4fa28a52e9w9h5"
 
     def test_wallet_sub_account(self):
-        account = Account(seed_phrase=self.seed_phrase,
-                          address_index=2,
-                          next_sequence=1)
+        account = Account(
+            seed_phrase=self.seed_phrase, address_index=2, next_sequence=1
+        )
         assert account.address == "cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9"
 
         account.increase_sequence(5)

@@ -10,9 +10,7 @@ class TestHTTPClientClass:
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = HTTPClient(
-            api='https://api.cosmos.interbloc.org'
-        )
+        client = HTTPClient(api="https://api.cosmos.interbloc.org")
 
         client.load_account_data(account)
 
@@ -27,9 +25,7 @@ class TestHTTPClientClass:
             next_sequence=0,
         )
 
-        client = HTTPClient(
-            api='https://api.cosmos.interbloc.org'
-        )
+        client = HTTPClient(api="https://api.cosmos.interbloc.org")
 
         fee = Coin(denom="uatom", amount="1000")
 
@@ -50,5 +46,6 @@ class TestHTTPClientClass:
         tx_data = client.broadcast_transaction(transaction=tx)
 
         assert (
-            tx_data[0] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+            tx_data[0]
+            == "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+        )

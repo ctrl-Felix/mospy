@@ -11,8 +11,7 @@ from mospy.Account import Account
 
 built_in_transactions = {}
 for transaction_adapter in ALL_TRANSACTION_HELPERS:
-    module = importlib.import_module("mospy._transactions." +
-                                     transaction_adapter)
+    module = importlib.import_module("mospy._transactions." + transaction_adapter)
     adapter = getattr(module, "Transaction")
     built_in_transactions[adapter.name] = adapter
 
@@ -87,8 +86,7 @@ class Transaction:
             tx_bytes (str): Transaction bytes
         """
         self._tx_raw.body_bytes = self._tx_body.SerializeToString()
-        self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString(
-        )
+        self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString()
         self._tx_raw.signatures.append(self._get_signatures())
         raw_tx = self._tx_raw.SerializeToString()
         tx_bytes = bytes(raw_tx)
@@ -96,8 +94,9 @@ class Transaction:
         return tx_b64
 
     def _get_signatures(self):
-        privkey = ecdsa.SigningKey.from_string(self._account.private_key,
-                                               curve=ecdsa.SECP256k1)
+        privkey = ecdsa.SigningKey.from_string(
+            self._account.private_key, curve=ecdsa.SECP256k1
+        )
         signature_compact = privkey.sign_deterministic(
             self._get_sign_doc().SerializeToString(),
             hashfunc=hashlib.sha256,
