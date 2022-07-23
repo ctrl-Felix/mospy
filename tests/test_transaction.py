@@ -32,5 +32,5 @@ class TestTransactionClass:
             denom="uatom",
         )
 
-        tx_bytes = tx.get_tx_bytes()
+        tx_bytes = tx.get_tx_bytes_as_string()
         assert tx_bytes == expected_tx_bytes

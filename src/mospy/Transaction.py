@@ -80,11 +80,13 @@ class Transaction:
         """
         self._fee = coin.Coin(amount=str(amount), denom=denom)
 
-    def get_tx_bytes(self) -> str:
-        """Sign the transaction and get the tx bytes which can be then used to broadcast the transaction to the network.
+    def get_tx_bytes(self) -> bytes:
+        """Sign the transaction and get the tx bytes which can be used to broadcast the transaction to the network.
+
+        To broadcast the transaction through the REST endpoint use the ``get_tx_bytes_as_string()`` method instead
 
         Returns:
-            tx_bytes (str): Transaction bytes
+            tx_bytes (bytes): Transaction bytes
         """
         self._tx_raw.body_bytes = self._tx_body.SerializeToString()
         self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString(
@@ -92,8 +94,18 @@ class Transaction:
         self._tx_raw.signatures.append(self._get_signatures())
         raw_tx = self._tx_raw.SerializeToString()
         tx_bytes = bytes(raw_tx)
+        return tx_bytes
+
+    def get_tx_bytes_as_string(self) -> str:
+        """Sign the transaction and get the base64 encoded tx bytes which can be used to broadcast the transaction to the network.
+
+        Returns:
+            tx_bytes (str): Transaction bytes
+        """
+        tx_bytes = self.get_tx_bytes()
         tx_b64 = base64.b64encode(tx_bytes).decode("utf-8")
         return tx_b64
+
 
     def _get_signatures(self):
         privkey = ecdsa.SigningKey.from_string(self._account.private_key,

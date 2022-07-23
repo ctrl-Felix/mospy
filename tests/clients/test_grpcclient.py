@@ -1,16 +1,16 @@
 from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
 from mospy import Account
 from mospy import Transaction
-from mospy.clients import HTTPClient
+from mospy.clients import GRPCClient
 
 
-class TestHTTPClientClass:
+class TestGRPCClientClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
 
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = HTTPClient()
+        client = GRPCClient()
 
         client.load_account_data(account)
 
@@ -25,7 +25,7 @@ class TestHTTPClientClass:
             next_sequence=0,
         )
 
-        client = HTTPClient()
+        client = GRPCClient()
 
         fee = Coin(denom="uatom", amount="1000")
 
@@ -47,4 +47,5 @@ class TestHTTPClientClass:
 
         assert (
             tx_data[0] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+        )

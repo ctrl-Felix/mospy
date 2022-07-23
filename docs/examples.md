@@ -66,7 +66,12 @@ tx.add_msg(
     denom="uatom"
 )
 
-# Sign and encode transaction to submit it to the network manually then
+# Sign and encode transaction to submit it to the network manually
+
+# REST endpoint (RPC or API)
+tx_bytes = tx.get_tx_bytes_as_string()
+
+# GRPC
 tx_bytes = tx.get_tx_bytes()
 ```
 
@@ -88,5 +93,5 @@ client.load_account_data(account=account)
 # Broadcast a transaction
 # Note: Do not call 'get_tx_bytes' on the transaction object before 
 # as it will be signed twice then
-hash, log = client.broadcast_transaction(transaction=tx)
+hash, code, log = client.broadcast_transaction(transaction=tx)
 ```

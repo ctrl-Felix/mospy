@@ -11,7 +11,7 @@ class HTTPClient:
         api (str): URL to a Cosmos api node
     """
 
-    def __init__(self, *, api: str = "https://api.cosmos.network"):
+    def __init__(self, *, api: str = "https://api.cosmos.interbloc.org"):
         self._api = api
 
     def load_account_data(self, account: Account):
@@ -38,7 +38,7 @@ class HTTPClient:
     def broadcast_transaction(self,
                               *,
                               transaction: Transaction,
-                              timeout: int = 10) -> [str, str]:
+                              timeout: int = 10) -> [str, int, str]:
         """
         Sign and broadcast a transaction.
 
@@ -46,15 +46,16 @@ class HTTPClient:
             Takes only positional arguments
 
         Args:
-            tx (Transaction): The transaction object
+            transaction (Transaction): The transaction object
             timeout (int): Timeout
 
         Returns:
             hash: Transaction hash
+            code: Result code
             log: Log (None if transaction successful)
         """
         url = self._api + "/cosmos/tx/v1beta1/txs"
-        tx_bytes = transaction.get_tx_bytes()
+        tx_bytes = transaction.get_tx_bytes_as_string()
         pushable_tx = {"tx_bytes": tx_bytes, "mode": "BROADCAST_MODE_SYNC"}
 
         req = httpx.post(url, json=pushable_tx, timeout=timeout)
@@ -67,4 +68,4 @@ class HTTPClient:
         code = data["tx_response"]["code"]
         log = None if code == 0 else data["tx_response"]["raw_log"]
 
-        return [hash, log]
+        return [hash, code, log]
