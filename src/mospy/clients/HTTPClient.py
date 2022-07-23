@@ -35,11 +35,11 @@ class HTTPClient:
         sequence = int(data['account']['sequence'])
         account_number = int(data['account']['account_number'])
 
-        account.next_sequence = sequence + 1
+        account.next_sequence = sequence
         account.account_number = account_number
 
 
-    def broadcast_transaction(self, *, tx: Transaction, account: Account) -> str:
+    def broadcast_transaction(self, *, transaction: Transaction, timeout: int = 10) -> [str, str]:
         """
         Sign and broadcast a transaction.
 
@@ -48,10 +48,29 @@ class HTTPClient:
 
         Args:
             tx (Transaction): The transaction object
-            account (Account): The sender account
+            timeout (int): Timeout
 
         Returns:
             hash: Transaction hash
+            log: Log (None if transaction successful)
         """
+        url = self._api + "/cosmos/tx/v1beta1/txs"
+        tx_bytes = transaction.get_tx_bytes()
+        pushable_tx = {
+                "tx_bytes": tx_bytes,
+                "mode": "BROADCAST_MODE_SYNC"
+        }
+
+        req = httpx.post(url, json=pushable_tx, timeout=timeout)
+
+        if req.status_code != 200:
+            raise RuntimeError("Error while doing request to api endpoint")
+
+        data = req.json()
+        hash = data['tx_response']['txhash']
+        code = data['tx_response']['code']
+        log = None if code == 0 else data['tx_response']['raw_log']
+
+        return [hash, log]
 
 
