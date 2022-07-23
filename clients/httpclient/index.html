@@ -443,7 +443,7 @@
           </td>
           <td><p>URL to a Cosmos api node</p></td>
           <td>
-                <code>&#39;https://api.cosmos.network&#39;</code>
+                <code>&#39;https://api.cosmos.interbloc.org&#39;</code>
           </td>
         </tr>
     </tbody>
@@ -516,7 +516,8 @@
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPClient</span><span class="p">:</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPClient</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class to interact with a cosmos chain through their API endpoint</span>
 
@@ -524,7 +525,7 @@
 <span class="sd">        api (str): URL to a Cosmos api node</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://api.cosmos.network&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">api</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://api.cosmos.interbloc.org&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">=</span> <span class="n">api</span>
 
     <span class="k">def</span> <span class="nf">load_account_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">):</span>
@@ -551,7 +552,7 @@
     <span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="o">*</span><span class="p">,</span>
                               <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
-                              <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+                              <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sign and broadcast a transaction.</span>
 
@@ -559,15 +560,16 @@
 <span class="sd">            Takes only positional arguments</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            tx (Transaction): The transaction object</span>
+<span class="sd">            transaction (Transaction): The transaction object</span>
 <span class="sd">            timeout (int): Timeout</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            hash: Transaction hash</span>
+<span class="sd">            code: Result code</span>
 <span class="sd">            log: Log (None if transaction successful)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">+</span> <span class="s2">&quot;/cosmos/tx/v1beta1/txs&quot;</span>
-        <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
+        <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes_as_string</span><span class="p">()</span>
         <span class="n">pushable_tx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tx_bytes&quot;</span><span class="p">:</span> <span class="n">tx_bytes</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;BROADCAST_MODE_SYNC&quot;</span><span class="p">}</span>
 
         <span class="n">req</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">pushable_tx</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
@@ -580,7 +582,7 @@
         <span class="n">code</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tx_response&quot;</span><span class="p">][</span><span class="s2">&quot;code&quot;</span><span class="p">]</span>
         <span class="n">log</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tx_response&quot;</span><span class="p">][</span><span class="s2">&quot;raw_log&quot;</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="nb">hash</span><span class="p">,</span> <span class="n">log</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">hash</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">log</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -626,7 +628,7 @@
     </thead>
     <tbody>
         <tr>
-          <td><code>tx</code></td>
+          <td><code>transaction</code></td>
           <td>
                 <code><a class="autorefs autorefs-internal" title="mospy.Transaction.Transaction" href="../../transaction/#mospy.Transaction.Transaction">Transaction</a></code>
           </td>
@@ -659,13 +661,19 @@
     <tbody>
         <tr>
 <td><code>hash</code></td>          <td>
-                <code>[str, str]</code>
+                <code>[str, int, str]</code>
           </td>
           <td><p>Transaction hash</p></td>
         </tr>
         <tr>
+<td><code>code</code></td>          <td>
+                <code>[str, int, str]</code>
+          </td>
+          <td><p>Result code</p></td>
+        </tr>
+        <tr>
 <td><code>log</code></td>          <td>
-                <code>[str, str]</code>
+                <code>[str, int, str]</code>
           </td>
           <td><p>Log (None if transaction successful)</p></td>
         </tr>
@@ -706,10 +714,11 @@
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="o">*</span><span class="p">,</span>
                           <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
-                          <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+                          <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sign and broadcast a transaction.</span>
 
@@ -717,15 +726,16 @@
 <span class="sd">        Takes only positional arguments</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        tx (Transaction): The transaction object</span>
+<span class="sd">        transaction (Transaction): The transaction object</span>
 <span class="sd">        timeout (int): Timeout</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        hash: Transaction hash</span>
+<span class="sd">        code: Result code</span>
 <span class="sd">        log: Log (None if transaction successful)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_api</span> <span class="o">+</span> <span class="s2">&quot;/cosmos/tx/v1beta1/txs&quot;</span>
-    <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
+    <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes_as_string</span><span class="p">()</span>
     <span class="n">pushable_tx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tx_bytes&quot;</span><span class="p">:</span> <span class="n">tx_bytes</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;BROADCAST_MODE_SYNC&quot;</span><span class="p">}</span>
 
     <span class="n">req</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">pushable_tx</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
@@ -738,7 +748,7 @@
     <span class="n">code</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tx_response&quot;</span><span class="p">][</span><span class="s2">&quot;code&quot;</span><span class="p">]</span>
     <span class="n">log</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tx_response&quot;</span><span class="p">][</span><span class="s2">&quot;raw_log&quot;</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="nb">hash</span><span class="p">,</span> <span class="n">log</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">hash</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">log</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>

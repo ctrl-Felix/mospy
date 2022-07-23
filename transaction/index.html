@@ -269,6 +269,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mospy.Transaction.Transaction.get_tx_bytes_as_string" class="md-nav__link">
+    get_tx_bytes_as_string()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mospy.Transaction.Transaction.set_fee" class="md-nav__link">
     set_fee()
   </a>
@@ -408,6 +415,13 @@
         <li class="md-nav__item">
   <a href="#mospy.Transaction.Transaction.get_tx_bytes" class="md-nav__link">
     get_tx_bytes()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mospy.Transaction.Transaction.get_tx_bytes_as_string" class="md-nav__link">
+    get_tx_bytes_as_string()
   </a>
   
 </li>
@@ -620,7 +634,19 @@
 <span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Transaction</span><span class="p">:</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Transaction</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class to create and sign a transaction</span>
 <span class="sd">    Args:</span>
 <span class="sd">        account (Account): Account object to sign this transaction</span>
@@ -683,11 +709,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fee</span> <span class="o">=</span> <span class="n">coin</span><span class="o">.</span><span class="n">Coin</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">amount</span><span class="p">),</span> <span class="n">denom</span><span class="o">=</span><span class="n">denom</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_tx_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sign the transaction and get the tx bytes which can be then used to broadcast the transaction to the network.</span>
+    <span class="k">def</span> <span class="nf">get_tx_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sign the transaction and get the tx bytes which can be used to broadcast the transaction to the network.</span>
+
+<span class="sd">        To broadcast the transaction through the REST endpoint use the ``get_tx_bytes_as_string()`` method instead</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            tx_bytes (str): Transaction bytes</span>
+<span class="sd">            tx_bytes (bytes): Transaction bytes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">body_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tx_body</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">auth_info_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_auth_info</span><span class="p">()</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">(</span>
@@ -695,8 +723,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_signatures</span><span class="p">())</span>
         <span class="n">raw_tx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
         <span class="n">tx_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">raw_tx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tx_bytes</span>
+
+    <span class="k">def</span> <span class="nf">get_tx_bytes_as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Sign the transaction and get the base64 encoded tx bytes which can be used to broadcast the transaction to the network.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tx_bytes (str): Transaction bytes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tx_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
         <span class="n">tx_b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">tx_bytes</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tx_b64</span>
+
 
     <span class="k">def</span> <span class="nf">_get_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">privkey</span> <span class="o">=</span> <span class="n">ecdsa</span><span class="o">.</span><span class="n">SigningKey</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_account</span><span class="o">.</span><span class="n">private_key</span><span class="p">,</span>
@@ -909,7 +947,8 @@
 
   <div class="doc doc-contents ">
   
-      <p>Sign the transaction and get the tx bytes which can be then used to broadcast the transaction to the network.</p>
+      <p>Sign the transaction and get the tx bytes which can be used to broadcast the transaction to the network.</p>
+<p>To broadcast the transaction through the REST endpoint use the <code>get_tx_bytes_as_string()</code> method instead</p>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -922,7 +961,7 @@
     <tbody>
         <tr>
 <td><code>tx_bytes</code></td>          <td>
-                <code>str</code>
+                <code>bytes</code>
           </td>
           <td><p>Transaction bytes</p></td>
         </tr>
@@ -944,11 +983,14 @@
 <span class="normal">93</span>
 <span class="normal">94</span>
 <span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_tx_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Sign the transaction and get the tx bytes which can be then used to broadcast the transaction to the network.</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_tx_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sign the transaction and get the tx bytes which can be used to broadcast the transaction to the network.</span>
+
+<span class="sd">    To broadcast the transaction through the REST endpoint use the ``get_tx_bytes_as_string()`` method instead</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tx_bytes (str): Transaction bytes</span>
+<span class="sd">        tx_bytes (bytes): Transaction bytes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">body_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tx_body</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">auth_info_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_auth_info</span><span class="p">()</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">(</span>
@@ -956,6 +998,62 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_signatures</span><span class="p">())</span>
     <span class="n">raw_tx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tx_raw</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
     <span class="n">tx_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">raw_tx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tx_bytes</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="mospy.Transaction.Transaction.get_tx_bytes_as_string" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_tx_bytes_as_string</span><span class="p">()</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Sign the transaction and get the base64 encoded tx bytes which can be used to broadcast the transaction to the network.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>tx_bytes</code></td>          <td>
+                <code>str</code>
+          </td>
+          <td><p>Transaction bytes</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>mospy\Transaction.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_tx_bytes_as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sign the transaction and get the base64 encoded tx bytes which can be used to broadcast the transaction to the network.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tx_bytes (str): Transaction bytes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tx_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
     <span class="n">tx_b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">tx_bytes</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">tx_b64</span>
 </code></pre></div></td></tr></table></div>
