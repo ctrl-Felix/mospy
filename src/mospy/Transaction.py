@@ -6,7 +6,6 @@ import cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 as coin
 import cosmospy_protobuf.cosmos.tx.v1beta1.tx_pb2 as tx
 import ecdsa
 from google.protobuf import any_pb2 as any
-
 from mospy._transactions import ALL_TRANSACTION_HELPERS
 from mospy.Account import Account
 

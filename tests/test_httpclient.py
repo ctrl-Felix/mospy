@@ -1,6 +1,6 @@
 from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
-
-from mospy import Account, Transaction
+from mospy import Account
+from mospy import Transaction
 from mospy.clients import HTTPClient
 
 
