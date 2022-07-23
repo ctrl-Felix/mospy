@@ -1,4 +1,4 @@
-from mospy.Account import Account
+from mospy import Account
 
 class TestAccountClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"

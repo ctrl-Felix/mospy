@@ -1,16 +1,20 @@
 # MosPy
 MosPy is a fork of the cosmospy library and aims to be a versatile transaction signing library for the whole cosmos ecosystem.
-It depends [cosmospy-protobuf](https://github.com/ctrl-Felix/cosmospy-protobuf) for the protos. Through this library you also can add your own transaction types and sign them through Mospy
+It depends [cosmospy-protobuf](https://github.com/ctrl-Felix/cosmospy-protobuf) for the protos. Through this library you also can add your own transaction types and sign them through Mospy.
 
-## Example
+## Documentation
+A documentation with according examples can be founds at https://mospy.ctrl-felix.de
+
+## Quickstart
+This is a quick example to showcase the functionality. For more information please check out the  [docs](https://mospy.ctrl-felix.de).
 ```python
 import json
 import httpx as httpx
 
 from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
 
-from mospy.Account import Account
-from mospy.Transaction import Transaction
+from mospy import Account
+from mospy import Transaction
 
 
 account = Account(

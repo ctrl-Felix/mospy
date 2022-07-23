@@ -11,8 +11,8 @@ class Account:
 
     Note:
         * You can't provide a ``seed_phrase`` and a``private_key``
-        * A ``readble`` method behaves is the getter for a Attribute
-        * A ``writable`` method is the setter for the Attribute
+        * A ``readble`` method behaves is the getter for a Attribute (Example: ``hrp = account.hrp``)
+        * A ``writable`` method is the setter for the Attribute (Example: ``account.hrp = "cosmos"``)
         * A method can be setter and getter at the same time. The Parameters description always refers to the setter while the Returns section belongs to the getter
 
 
@@ -119,10 +119,16 @@ class Account:
         """
         On-chain account number which will be assigned when the address receives coins for the first time.
 
+        Args:
+            account_number (int): Account Number
         Returns:
             Account number
         """
         return self._account_number
+
+    @account_number.setter
+    def account_number(self, account_number: int):
+        self._account_number = account_number
 
     @property
     def next_sequence(self) -> int:
@@ -138,7 +144,7 @@ class Account:
         return self._next_sequence
 
     @next_sequence.setter
-    def set_next_sequence(self, next_sequence):
+    def next_sequence(self, next_sequence):
         self._next_sequence = next_sequence
 
 
