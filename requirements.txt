@@ -1,6 +1,7 @@
 bech32==1.2.0
 cosmospy_protobuf==0.0.1
 ecdsa==0.17.0
+grpcio~=1.47.0
 hdwallets==0.1.2
 httpx==0.23.0
 mnemonic==0.20

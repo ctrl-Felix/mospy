@@ -18,6 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "protobuf==4.21.3",
+    "grpcio~=1.47.0",
     "httpx==0.23.0",
     "cosmospy-protobuf==0.0.1",
     "ecdsa==0.17.0",
