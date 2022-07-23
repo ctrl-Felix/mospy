@@ -13,7 +13,8 @@ from mospy._transactions import ALL_TRANSACTION_HELPERS
 
 built_in_transactions = {}
 for transaction_adapter in ALL_TRANSACTION_HELPERS:
-    module = importlib.import_module("mospy._transactions." + transaction_adapter)
+    module = importlib.import_module(
+        "mospy._transactions." + transaction_adapter)
     adapter = getattr(module, 'Transaction')
     built_in_transactions[adapter.name] = adapter
 
@@ -99,7 +100,8 @@ class Transaction:
         return tx_b64
 
     def _get_signatures(self):
-        privkey = ecdsa.SigningKey.from_string(self._account.private_key, curve=ecdsa.SECP256k1)
+        privkey = ecdsa.SigningKey.from_string(
+            self._account.private_key, curve=ecdsa.SECP256k1)
         signature_compact = privkey.sign_deterministic(
             self._get_sign_doc().SerializeToString(),
             hashfunc=hashlib.sha256,

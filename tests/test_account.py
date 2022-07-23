@@ -1,5 +1,6 @@
 from mospy.Account import Account
 
+
 class TestAccountClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
 
@@ -22,6 +23,3 @@ class TestAccountClass:
         account.increase_sequence(5)
 
         assert account.next_sequence == 6
-
-
-

@@ -6,6 +6,7 @@ from mospy.Transaction import Transaction
 
 expected_tx_bytes = "CpABCo0BChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEm0KLWNvc21vczFxZWNuMHVqcDRydzhobjkzbDlqcHN4eXc0ZmEyOGE1MjM3YTRweBItY29zbW9zMXRrdjlycXV4cjg4cjdzbnJnNDJreGRqOWdzbmZ4eGcwMjhrdWg5Gg0KBXVhdG9tEgQxMDAwEmYKUApGCh8vY29zbW9zLmNyeXB0by5zZWNwMjU2azEuUHViS2V5EiMKIQIkQVvG9OBetDe7bYUgl2vwgbJFxmmGuquytVSEwhQ0uBIECgIIARgBEhIKDQoFdWF0b20SBDEwMDAQ6AcaQJqww3jDNgn4UMDpaFq34xPbdwTAsn4VnRvZ1rjYGCMEa6fDKnu9T5xlQV5IEpCDeMzmNBEhTo9QtcOIzjjPzes="
 
+
 class TestTransactionClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
 
@@ -15,7 +16,6 @@ class TestTransactionClass:
             account_number=1,
             next_sequence=1
         )
-
 
         fee = Coin(
             denom="uatom",
