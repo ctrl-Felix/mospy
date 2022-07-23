@@ -1,7 +1,7 @@
+import httpx
+
 from mospy.Account import Account
 from mospy.Transaction import Transaction
-
-import httpx
 
 
 class HTTPClient:
