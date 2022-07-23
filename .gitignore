@@ -10,3 +10,6 @@ junit
 
 # Venv
 venv
+
+# Mkdocs
+site
