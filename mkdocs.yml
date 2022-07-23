@@ -12,6 +12,6 @@ nav:
   - Clients:
       - Overview: 'clients\index.md'
       - HTTPClient: 'clients\httpclient.md'
-  - 'examples.md'
+  - "examples.md"
 theme:
   name: "material"
