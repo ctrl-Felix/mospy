@@ -10,6 +10,3 @@ A documentation with according examples can be found at https://mospy.ctrl-felix
 ## Quickstart
 
 Please check out the [documentation](https://mospy.ctrl-felix.de) for informations on how to use MosPy
-
-
-

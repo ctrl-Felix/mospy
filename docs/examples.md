@@ -1,4 +1,5 @@
 # Examples
+
 Here you'll find some useful code snippets to get started with MosPy
 
 ## Account
@@ -6,6 +7,7 @@ Here you'll find some useful code snippets to get started with MosPy
 Examples showing the use of the account class
 
 ### Account creation
+
 ```python
 
 from mospy import Account
@@ -13,7 +15,7 @@ from mospy import Account
 # Generate a new Account with a new seed phrase
 account1 = Account()
 
-# Create an account object through a seed phrase and 
+# Create an account object through a seed phrase and
 # get a sub-account of that seed by passing the address index (optional)
 
 account2 = Account(
@@ -71,6 +73,7 @@ tx_bytes = tx.get_tx_bytes()
 ```
 
 ## Client
+
 Examples howing the usage of the included clients
 
 ```python
@@ -86,7 +89,7 @@ client = HTTPClient(
 client.load_account_data(account=account)
 
 # Broadcast a transaction
-# Note: Do not call 'get_tx_bytes' on the transaction object before 
+# Note: Do not call 'get_tx_bytes' on the transaction object before
 # as it will be signed twice then
 hash, log = client.broadcast_transaction(transaction=tx)
 ```

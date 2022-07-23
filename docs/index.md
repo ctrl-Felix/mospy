@@ -9,6 +9,5 @@ Currently the only way to install mospy is by installing it directly from the gi
 
 ## Support
 
-When facing issues feel free to open a [github issue](https://github.com/ctrl-felix/mospy/issues) 
+When facing issues feel free to open a [github issue](https://github.com/ctrl-felix/mospy/issues)
 or reach out to the creators on the [Osmosis Discord](https://discord.gg/E2vkD6W8Xe).
-
