@@ -52,7 +52,7 @@ class Account:
         if not seed_phrase and not private_key:
             self._seed_phrase = Mnemonic(language="english").generate(
                 strength=256)
-            self._private_key = seed_to_private_key(seed_phrase,
+            self._private_key = seed_to_private_key(self._seed_phrase,
                                                     self._derivation_path())
 
         elif seed_phrase and not private_key:
@@ -79,7 +79,7 @@ class Account:
         Current address which depends on the hrp and the private key
 
         Returns:
-            Private Key
+            Address
         """
         if not self._seed_phrase:
             address = privkey_to_address(self._private_key, hrp=self._hrp)
@@ -91,6 +91,16 @@ class Account:
             address = privkey_to_address(sub_private_key, hrp=self._hrp)
 
         return address
+
+    @property
+    def seed_phrase(self) -> str:
+        """
+        Current Seed Phrase
+
+        Returns:
+            Seed Phrase
+        """
+        return self._seed_phrase
 
     @property
     def private_key(self) -> bytes:

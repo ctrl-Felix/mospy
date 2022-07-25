@@ -18,3 +18,8 @@ class TestAccountClass:
         account.increase_sequence(5)
 
         assert account.next_sequence == 6
+
+    def test_wallet_generation(self):
+        account = Account()
+
+        assert(len(account.seed_phrase.split())) == 24
