@@ -12,6 +12,7 @@ nav:
   - Clients:
       - Overview: 'clients\index.md'
       - HTTPClient: 'clients\httpclient.md'
+      - GRPCClient: 'clients\grpcclient.md'
   - 'examples.md'
 theme:
   name: "material"

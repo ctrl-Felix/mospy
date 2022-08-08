@@ -75,6 +75,22 @@ tx_bytes = tx.get_tx_bytes_as_string()
 tx_bytes = tx.get_tx_bytes()
 ```
 
+## Custom Transaction Message
+You can easily use every other tx type too. The ``type_url`` usually matches the import path.
+```python
+# References the tx class from above before signing
+
+from cosmospy_protobuf.cosmos.distribution.v1beta1.tx_pb2 import MsgSetWithdrawAddress
+
+wmsg = MsgSetWithdrawAddress(
+    delegator_address=account.address,
+    withdraw_address="newaddresshere"
+
+)
+tx.add_raw_msg(wmsg, type_url="/cosmos.distribution.v1beta1.MsgSetWithdrawAddress")
+
+```
+
 ## Client
 Examples howing the usage of the included clients
 

@@ -5,3 +5,4 @@ The client classes contain helper functions supporting you while interacting wit
 ### Supported Endpoints
 
 - API: [`HTTPClient`](httpclient.md)
+- GRPC: [`GRPCClient`](grpcclient.md)

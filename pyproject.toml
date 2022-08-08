@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mospy"
-version = "0.0.1"
+name = "mospy-wallet"
+version = "0.1.0"
 description = "This package is a fork of cosmospy and is a light framework for the cosmos ecosystem"
 authors = [
     { name = "ctrl-felix", email = "dev@ctrl-felix.de" },
@@ -20,7 +20,7 @@ dependencies = [
     "protobuf==4.21.3",
     "grpcio~=1.47.0",
     "httpx==0.23.0",
-    "cosmospy-protobuf==0.0.1",
+    "cosmospy-protobuf==0.0.2",
     "ecdsa==0.17.0",
     "bech32==1.2.0",
     "mnemonic==0.20",
