@@ -1,15 +1,10 @@
 import base64
+import importlib
 
 import grpc
-import httpx
 from google.protobuf.json_format import MessageToDict
 from mospy.Account import Account
 from mospy.Transaction import Transaction
-
-from cosmospy_protobuf.cosmos.tx.v1beta1.service_pb2 import BroadcastTxRequest
-import cosmospy_protobuf.cosmos.auth.v1beta1.query_pb2 as account_query
-import cosmospy_protobuf.cosmos.auth.v1beta1.query_pb2_grpc as account_query_grpc
-import cosmospy_protobuf.cosmos.tx.v1beta1.service_pb2_grpc as tx_grpc
 
 class GRPCClient:
     """
@@ -19,9 +14,25 @@ class GRPCClient:
         host (str): URL to a Cosmos api node
         port (int): Port to connect to
         ssl (bool): Whether an ssl encrypted endpoint should be used
+        protobuf (str): Which protobuf files to use
     """
 
-    def __init__(self, *, host: str = "cosmoshub.strange.love", port: int = 9090, ssl: bool = False ):
+    def __init__(self, *, host: str = "cosmoshub.strange.love", port: int = 9090, ssl: bool = False, protobuf = "cosmos" ):
+
+        _protobuf_packages = {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        _protobuf_package = _protobuf_packages[
+            protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
+        try:
+            self.BroadcastTxRequest = importlib.import_module(_protobuf_package + ".cosmos.tx.v1beta1.service_pb2").BroadcastTxRequest
+            self.query_pb2 = importlib.import_module(_protobuf_package + ".cosmos.auth.v1beta1.query_pb2")
+            self.query_pb2_grpc = importlib.import_module(_protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc")
+            self.service_pb2_grpc = importlib.import_module(_protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc")
+        except AttributeError:
+            raise ImportError(
+                "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information.")
+        except:
+            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed? ")
+
         self._host = host
         self._port = port
         self._ssl = ssl
@@ -48,8 +59,8 @@ class GRPCClient:
         con = self._connect()
         address = account.address
 
-        query_stub = account_query_grpc.QueryStub(con)
-        account_request = account_query.QueryAccountRequest(
+        query_stub = self.query_pb2_grpc.QueryStub(con)
+        account_request = self.query_pb2.QueryAccountRequest(
             address=address
         )
 
@@ -84,16 +95,21 @@ class GRPCClient:
         con = self._connect()
         tx_bytes = transaction.get_tx_bytes()
 
-        tx_request = BroadcastTxRequest(
+        tx_request = self.BroadcastTxRequest(
             tx_bytes=tx_bytes,
             mode=2  # BROADCAST_MODE_SYNC
         )
 
-        tx_stub = tx_grpc.ServiceStub(con)
+        tx_stub = self.service_pb2_grpc.ServiceStub(con)
         tx_data = tx_stub.BroadcastTx(tx_request)
 
         hash = tx_data.tx_response.txhash
         code = tx_data.tx_response.code
         log = None if code == 0 else tx_data.tx_response.raw_log
 
-        return [hash, code, log]
+        return {
+            "hash": hash,
+            "code": code,
+            "log": log
+        }
+

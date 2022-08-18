@@ -35,29 +35,32 @@ class Account:
     _RAW_DERIVATION_PATH = "m/44'/{slip44}'/0'/0/{address_index}"
 
     def __init__(
-        self,
-        seed_phrase: str = None,
-        private_key: str = None,
-        next_sequence: int = None,
-        account_number: int = None,
-        slip44: int = 118,
-        hrp: str = "cosmos",
-        address_index: int = 0,
-        protobuf: str = "cosmos"
+            self,
+            seed_phrase: str = None,
+            private_key: str = None,
+            next_sequence: int = None,
+            account_number: int = None,
+            slip44: int = 118,
+            hrp: str = "cosmos",
+            address_index: int = 0,
+            protobuf: str = "cosmos"
     ):
-        _protobuf_packages =  {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
-        _protobuf_package = _protobuf_packages[protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
+        _protobuf_packages = {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        _protobuf_package = _protobuf_packages[
+            protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
         try:
             self.keys_pb2 = importlib.import_module(_protobuf_package + ".cosmos.crypto.secp256k1.keys_pb2")
+        except AttributeError:
+            raise ImportError(
+                "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information.")
         except:
-            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed?")
+            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed? ")
 
         self._slip44 = slip44
         self._hrp = hrp
         self._address_index = address_index
         self._next_sequence = next_sequence
         self._account_number = account_number
-
 
         if not seed_phrase and not private_key:
             self._seed_phrase = Mnemonic(language="english").generate(

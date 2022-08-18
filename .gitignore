@@ -16,3 +16,6 @@ site
 
 # Build
 dist/
+
+# Scripts for manual testing
+scripts

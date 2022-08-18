@@ -8,7 +8,7 @@ class HTTPClient:
     Wrapper class to interact with a cosmos chain through their API endpoint
 
     Args:
-        api (str): URL to a Cosmos api node
+        api (str): URL to a Api node
     """
 
     def __init__(self, *, api: str = "https://api.cosmos.interbloc.org"):
@@ -68,4 +68,8 @@ class HTTPClient:
         code = data["tx_response"]["code"]
         log = None if code == 0 else data["tx_response"]["raw_log"]
 
-        return [hash, code, log]
+        return {
+            "hash": hash,
+            "code": code,
+            "log": log
+        }
