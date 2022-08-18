@@ -1,5 +1,6 @@
+import importlib
+
 import hdwallets
-from cosmospy_protobuf.cosmos.crypto.secp256k1 import keys_pb2 as keys
 from mnemonic import Mnemonic
 from mospy.utils import privkey_to_address
 from mospy.utils import privkey_to_pubkey
@@ -25,7 +26,7 @@ class Account:
         slip44 (int): Slip44 value
         hrp (str): Address Prefix
         address_index (int): Address index to get sub accounts for seed phrases (doesn't work when using a private key)
-
+        protobuf (str): Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)
     """
 
     address: str
@@ -42,12 +43,21 @@ class Account:
         slip44: int = 118,
         hrp: str = "cosmos",
         address_index: int = 0,
+        protobuf: str = "cosmos"
     ):
+        _protobuf_packages =  {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        _protobuf_package = _protobuf_packages[protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
+        try:
+            self.keys_pb2 = importlib.import_module(_protobuf_package + ".cosmos.crypto.secp256k1.keys_pb2")
+        except:
+            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed?")
+
         self._slip44 = slip44
         self._hrp = hrp
         self._address_index = address_index
         self._next_sequence = next_sequence
         self._account_number = account_number
+
 
         if not seed_phrase and not private_key:
             self._seed_phrase = Mnemonic(language="english").generate(
@@ -120,7 +130,7 @@ class Account:
             return self._private_key
 
     @property
-    def public_key(self) -> keys.PubKey:
+    def public_key(self) -> str:
         """
         Current public key which depends on the slip 44 param and the address index if the account is instantiated through a seed.
 
@@ -128,7 +138,7 @@ class Account:
             Public Key
         """
         pubkey_bytes = privkey_to_pubkey(self.private_key)
-        _pubkey = keys.PubKey()
+        _pubkey = self.keys_pb2.PubKey()
         _pubkey.key = pubkey_bytes
         return _pubkey
 
