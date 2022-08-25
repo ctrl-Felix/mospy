@@ -32,24 +32,19 @@ class GRPCClient:
             "osmosis": "osmosis_protobuf",
             "evmos": "evmos_protobuf",
         }
-        _protobuf_package = (
-            _protobuf_packages[protobuf.lower()]
-            if protobuf.lower() in _protobuf_packages.keys()
-            else protobuf
-        )
+        _protobuf_package = (_protobuf_packages[protobuf.lower()]
+                             if protobuf.lower() in _protobuf_packages.keys()
+                             else protobuf)
         try:
             self.BroadcastTxRequest = importlib.import_module(
-                _protobuf_package + ".cosmos.tx.v1beta1.service_pb2"
-            ).BroadcastTxRequest
+                _protobuf_package +
+                ".cosmos.tx.v1beta1.service_pb2").BroadcastTxRequest
             self.query_pb2 = importlib.import_module(
-                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2"
-            )
+                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2")
             self.query_pb2_grpc = importlib.import_module(
-                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc"
-            )
+                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc")
             self.service_pb2_grpc = importlib.import_module(
-                _protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc"
-            )
+                _protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc")
         except AttributeError:
             raise ImportError(
                 "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information."
@@ -66,8 +61,8 @@ class GRPCClient:
     def _connect(self):
         if self._ssl:
             con = grpc.secure_channel(
-                f"{self._host}:{self._port}", credentials=grpc.ssl_channel_credentials()
-            )
+                f"{self._host}:{self._port}",
+                credentials=grpc.ssl_channel_credentials())
         else:
             con = grpc.insecure_channel(f"{self._host}:{self._port}")
         return con
@@ -95,9 +90,10 @@ class GRPCClient:
         account.account_number = account_number
         con.close()
 
-    def broadcast_transaction(
-        self, *, transaction: Transaction, timeout: int = 10
-    ) -> [str, int, str]:
+    def broadcast_transaction(self,
+                              *,
+                              transaction: Transaction,
+                              timeout: int = 10) -> [str, int, str]:
         """
         Sign and broadcast a transaction.
 
@@ -116,7 +112,8 @@ class GRPCClient:
         tx_bytes = transaction.get_tx_bytes()
 
         tx_request = self.BroadcastTxRequest(
-            tx_bytes=tx_bytes, mode=2  # BROADCAST_MODE_SYNC
+            tx_bytes=tx_bytes,
+            mode=2  # BROADCAST_MODE_SYNC
         )
 
         tx_stub = self.service_pb2_grpc.ServiceStub(con)
