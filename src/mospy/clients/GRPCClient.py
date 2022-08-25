@@ -3,7 +3,6 @@ import importlib
 
 import grpc
 from google.protobuf.json_format import MessageToDict
-
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 

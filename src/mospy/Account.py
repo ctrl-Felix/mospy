@@ -2,9 +2,9 @@ import importlib
 
 import hdwallets
 from mnemonic import Mnemonic
-
-from mospy.utils import (privkey_to_address, privkey_to_pubkey,
-                         seed_to_private_key)
+from mospy.utils import privkey_to_address
+from mospy.utils import privkey_to_pubkey
+from mospy.utils import seed_to_private_key
 
 
 class Account:
