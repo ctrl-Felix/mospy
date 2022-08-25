@@ -41,7 +41,7 @@ class GRPCClient:
         if self._ssl:
             con = grpc.secure_channel(
                 f'{self._host}:{self._port}',
-                credentials=grpc.ChannelCredentials
+                credentials=grpc.ssl_channel_credentials()
             )
         else:
             con = grpc.insecure_channel(
