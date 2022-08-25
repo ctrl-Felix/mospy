@@ -1,5 +1,4 @@
 import httpx
-
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
