@@ -68,8 +68,4 @@ class HTTPClient:
         code = data["tx_response"]["code"]
         log = None if code == 0 else data["tx_response"]["raw_log"]
 
-        return {
-            "hash": hash,
-            "code": code,
-            "log": log
-        }
+        return {"hash": hash, "code": code, "log": log}
