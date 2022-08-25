@@ -45,16 +45,19 @@ class Account:
             address_index: int = 0,
             protobuf: str = "cosmos"
     ):
-        _protobuf_packages = {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        _protobuf_packages = {'cosmos': 'cosmospy_protobuf',
+                              'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
         _protobuf_package = _protobuf_packages[
             protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
         try:
-            self.keys_pb2 = importlib.import_module(_protobuf_package + ".cosmos.crypto.secp256k1.keys_pb2")
+            self.keys_pb2 = importlib.import_module(
+                _protobuf_package + ".cosmos.crypto.secp256k1.keys_pb2")
         except AttributeError:
             raise ImportError(
                 "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information.")
         except:
-            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed? ")
+            raise ImportError(
+                f"Couldn't import from {_protobuf_package}. Is the package installed? ")
 
         self._slip44 = slip44
         self._hrp = hrp

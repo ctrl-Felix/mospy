@@ -37,13 +37,18 @@ class Transaction:
         protobuf: str = "cosmos"
     ) -> None:
 
-        _protobuf_packages = {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
-        self._protobuf_package = _protobuf_packages[protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
+        _protobuf_packages = {'cosmos': 'cosmospy_protobuf',
+                              'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        self._protobuf_package = _protobuf_packages[protobuf.lower(
+        )] if protobuf.lower() in _protobuf_packages.keys() else protobuf
         try:
-            self.coin_pb2 = importlib.import_module(self._protobuf_package + ".cosmos.base.v1beta1.coin_pb2")
-            self.tx_pb2 = importlib.import_module(self._protobuf_package + ".cosmos.tx.v1beta1.tx_pb2")
+            self.coin_pb2 = importlib.import_module(
+                self._protobuf_package + ".cosmos.base.v1beta1.coin_pb2")
+            self.tx_pb2 = importlib.import_module(
+                self._protobuf_package + ".cosmos.tx.v1beta1.tx_pb2")
         except:
-            raise ImportError(f"Couldn't import from {self._protobuf_package}. Is the package installed?")
+            raise ImportError(
+                f"Couldn't import from {self._protobuf_package}. Is the package installed?")
 
         if fee and not isinstance(fee, (self.coin_pb2.Coin)):
             raise ValueError("The fee is not a valid.")
@@ -64,7 +69,8 @@ class Transaction:
             tx_type (str): Transaction type to match the transaction with the pre-defined ones
             **kwargs: Depending on the transaction type
         """
-        msg_data = built_in_transactions[tx_type](protobuf_package=self._protobuf_package,**kwargs).format()
+        msg_data = built_in_transactions[tx_type](
+            protobuf_package=self._protobuf_package, **kwargs).format()
         self.add_raw_msg(msg_data[1], type_url=msg_data[0])
 
     def add_raw_msg(self, unpacked_msg, type_url: str) -> None:
@@ -115,7 +121,6 @@ class Transaction:
         tx_bytes = self.get_tx_bytes()
         tx_b64 = base64.b64encode(tx_bytes).decode("utf-8")
         return tx_b64
-
 
     def _get_signatures(self):
         privkey = ecdsa.SigningKey.from_string(self._account.private_key,

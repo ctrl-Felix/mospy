@@ -6,6 +6,7 @@ from google.protobuf.json_format import MessageToDict
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
+
 class GRPCClient:
     """
     Wrapper class to interact with a cosmos chain through their grpc endpoint
@@ -17,21 +18,27 @@ class GRPCClient:
         protobuf (str): Which protobuf files to use
     """
 
-    def __init__(self, *, host: str = "cosmoshub.strange.love", port: int = 9090, ssl: bool = False, protobuf = "cosmos" ):
+    def __init__(self, *, host: str = "cosmoshub.strange.love", port: int = 9090, ssl: bool = False, protobuf="cosmos"):
 
-        _protobuf_packages = {'cosmos': 'cosmospy_protobuf', 'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
+        _protobuf_packages = {'cosmos': 'cosmospy_protobuf',
+                              'osmosis': 'osmosis_protobuf', 'evmos': 'evmos_protobuf'}
         _protobuf_package = _protobuf_packages[
             protobuf.lower()] if protobuf.lower() in _protobuf_packages.keys() else protobuf
         try:
-            self.BroadcastTxRequest = importlib.import_module(_protobuf_package + ".cosmos.tx.v1beta1.service_pb2").BroadcastTxRequest
-            self.query_pb2 = importlib.import_module(_protobuf_package + ".cosmos.auth.v1beta1.query_pb2")
-            self.query_pb2_grpc = importlib.import_module(_protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc")
-            self.service_pb2_grpc = importlib.import_module(_protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc")
+            self.BroadcastTxRequest = importlib.import_module(
+                _protobuf_package + ".cosmos.tx.v1beta1.service_pb2").BroadcastTxRequest
+            self.query_pb2 = importlib.import_module(
+                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2")
+            self.query_pb2_grpc = importlib.import_module(
+                _protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc")
+            self.service_pb2_grpc = importlib.import_module(
+                _protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc")
         except AttributeError:
             raise ImportError(
                 "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information.")
         except:
-            raise ImportError(f"Couldn't import from {_protobuf_package}. Is the package installed? ")
+            raise ImportError(
+                f"Couldn't import from {_protobuf_package}. Is the package installed? ")
 
         self._host = host
         self._port = port
@@ -112,4 +119,3 @@ class GRPCClient:
             "code": code,
             "log": log
         }
-

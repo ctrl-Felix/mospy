@@ -15,10 +15,13 @@ class Transaction:
                  denom: str
                  ):
         try:
-            self._coin_pb2 = importlib.import_module(protobuf_package + ".cosmos.base.v1beta1.coin_pb2")
-            self._tx_pb2 = importlib.import_module(protobuf_package + ".cosmos.bank.v1beta1.tx_pb2")
+            self._coin_pb2 = importlib.import_module(
+                protobuf_package + ".cosmos.base.v1beta1.coin_pb2")
+            self._tx_pb2 = importlib.import_module(
+                protobuf_package + ".cosmos.bank.v1beta1.tx_pb2")
         except:
-            raise ImportError(f"Couldn't import from {protobuf_package}. Is the package installed?")
+            raise ImportError(
+                f"Couldn't import from {protobuf_package}. Is the package installed?")
 
         _tx_coin = self._coin_pb2.Coin()
         _tx_coin.denom = denom
