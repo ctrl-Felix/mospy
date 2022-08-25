@@ -8,16 +8,19 @@ Currently the only way to install mospy is by installing it directly from the gi
 `python -m pip install git+https://github.com/ctrl-Felix/mospy.git `
 
 ## Dependencies
+
 By default mospy will import the protobuf files from cosmospy-protobuf and therefore work with the Cosmos chain.
 If you want to use it on another chain I highly recommend to use thee according protobufs to avoid version conflicts.
-The `Account` and `Transaction` class both take a `protobuf` argument to specify the protobufs. Note: You have to install 
+The `Account` and `Transaction` class both take a `protobuf` argument to specify the protobufs. Note: You have to install
 them manually as mospy ships woth cosmospy_protobuf. You can use:
-* `evmos` for `evmos-protobuf`
-* `osmosis` for `osmosis-protobuf`
-* `cosmos` for `cosmospy-protobuf` (default)
-* `<your module here>` for your own protobuf module following the cosmos name schema
+
+- `evmos` for `evmos-protobuf`
+- `osmosis` for `osmosis-protobuf`
+- `cosmos` for `cosmospy-protobuf` (default)
+- `<your module here>` for your own protobuf module following the cosmos name schema
 
 ## Get started
+
 ```python
 import httpx # optional
 from mospy import Account, Transaction
@@ -67,14 +70,14 @@ r = httpx.post(rpc_url, data=pushable_tx)
 rpc_api = "https://api.cosmos.network/cosmos/tx/v1beta1/txs"
 pushable_tx = json.dumps(
                 {
-                  "tx_bytes": tx_bytes, 
+                  "tx_bytes": tx_bytes,
                   "mode": "BROADCAST_MODE_SYNC" # Available modes: BROADCAST_MODE_SYNC, BROADCAST_MODE_ASYNC, BROADCAST_MODE_BLOCK
                 }
               )
 r = httpx.post(rpc_api, data=pushable_tx)
 ```
+
 ## Support
 
-When facing issues feel free to open a [github issue](https://github.com/ctrl-felix/mospy/issues) 
+When facing issues feel free to open a [github issue](https://github.com/ctrl-felix/mospy/issues)
 or reach out to the creators on the [Osmosis Discord](https://discord.gg/E2vkD6W8Xe).
-

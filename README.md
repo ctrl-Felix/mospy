@@ -8,14 +8,17 @@ It depends [cosmospy-protobuf](https://github.com/ctrl-Felix/cosmospy-protobuf) 
 A documentation with according examples can be found at https://mospy.ctrl-felix.de
 
 ## Installation
+
 Mospy is available through (pypi)[https://pypi.org/project/mospy-wallet]
 
-``python -m pip install mospy-wallet``
+`python -m pip install mospy-wallet`
 
 _Note: The package name in python is mospy even if it is called mospy-wallet on pypi as mospy already existed_
 
 ## Quickstart
+
 More examples on: https://mospy.ctrl-felix.de/examples/
+
 ```python
 import httpx # optional
 from mospy import Account, Transaction
@@ -65,12 +68,9 @@ r = httpx.post(rpc_url, data=pushable_tx)
 rpc_api = "https://api.cosmos.network/cosmos/tx/v1beta1/txs"
 pushable_tx = json.dumps(
                 {
-                  "tx_bytes": tx_bytes, 
+                  "tx_bytes": tx_bytes,
                   "mode": "BROADCAST_MODE_SYNC" # Available modes: BROADCAST_MODE_SYNC, BROADCAST_MODE_ASYNC, BROADCAST_MODE_BLOCK
                 }
               )
 r = httpx.post(rpc_api, data=pushable_tx)
 ```
-
-
-
