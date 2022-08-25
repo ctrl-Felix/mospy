@@ -10,11 +10,7 @@ class TestGRPCClientClass:
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = GRPCClient(
-            host="grpc.cosmos.interbloc.org",
-            port=443,
-            ssl=True
-        )
+        client = GRPCClient(host="grpc.cosmos.interbloc.org", port=443, ssl=True)
 
         client.load_account_data(account)
 
@@ -29,11 +25,7 @@ class TestGRPCClientClass:
             next_sequence=0,
         )
 
-        client = GRPCClient(
-            host="grpc.cosmos.interbloc.org",
-            port=443,
-            ssl=True
-        )
+        client = GRPCClient(host="grpc.cosmos.interbloc.org", port=443, ssl=True)
 
         fee = Coin(denom="uatom", amount="1000")
 
@@ -54,5 +46,6 @@ class TestGRPCClientClass:
         tx_data = client.broadcast_transaction(transaction=tx)
 
         assert (
-            tx_data["hash"] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+            tx_data["hash"]
+            == "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+        )
