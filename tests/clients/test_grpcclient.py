@@ -46,6 +46,6 @@ class TestGRPCClientClass:
         tx_data = client.broadcast_transaction(transaction=tx)
 
         assert (
-            tx_data["hash"] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
+            tx_data["hash"]
+            == "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4"
         )

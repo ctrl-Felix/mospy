@@ -35,10 +35,9 @@ class HTTPClient:
         account.next_sequence = sequence
         account.account_number = account_number
 
-    def broadcast_transaction(self,
-                              *,
-                              transaction: Transaction,
-                              timeout: int = 10) -> [str, int, str]:
+    def broadcast_transaction(
+        self, *, transaction: Transaction, timeout: int = 10
+    ) -> [str, int, str]:
         """
         Sign and broadcast a transaction.
 
@@ -68,8 +67,4 @@ class HTTPClient:
         code = data["tx_response"]["code"]
         log = None if code == 0 else data["tx_response"]["raw_log"]
 
-        return {
-            "hash": hash,
-            "code": code,
-            "log": log
-        }
+        return {"hash": hash, "code": code, "log": log}
