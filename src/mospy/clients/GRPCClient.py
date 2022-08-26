@@ -14,8 +14,9 @@ class GRPCClient:
     Args:
         host (str): URL to a Cosmos api node
         port (int): Port to connect to
-        ssl (bool): Whether an ssl encrypted endpoint should be used
-        protobuf (str): Which protobuf files to use
+        ssl (bool): Whether a ssl encrypted endpoint should be used
+        protobuf (str): Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)
+
     """
 
     def __init__(

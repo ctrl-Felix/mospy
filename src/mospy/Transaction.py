@@ -23,6 +23,8 @@ class Transaction:
         fee (coin): The fee to pay for this transaction (This can also be added later through the ``set_fee`` method)
         memo (str): Memo
         chain_id (str): Chain-Id "cosmoshub-4",
+        protobuf (str): Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)
+
 
     """
 
