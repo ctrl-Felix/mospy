@@ -8,6 +8,10 @@ class TestAccountClass:
         account = Account(seed_phrase=self.seed_phrase, hrp="osmo")
 
         assert account.address == "osmo1qecn0ujp4rw8hn93l9jpsxyw4fa28a52e9w9h5"
+    def test_wallet_creation_with_seed_for_eth(self):
+        account = Account(seed_phrase=self.seed_phrase, hrp="evmos", eth=True, slip44=60)
+
+        assert (account.address, account.eth_address) == ("evmos15xrv3rcyr0kpnxcy7h9herlurkemmsmfn04euj", "0xa186c88f041bec199b04f5cb7c8ffc1db3bdc369")
 
     def test_wallet_sub_account(self):
         account = Account(seed_phrase=self.seed_phrase,

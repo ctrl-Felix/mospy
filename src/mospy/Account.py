@@ -5,6 +5,7 @@ from mnemonic import Mnemonic
 from mospy.utils import privkey_to_address
 from mospy.utils import privkey_to_pubkey
 from mospy.utils import seed_to_private_key
+from mospy.utils import privkey_to_eth_address
 
 
 class Account:
@@ -44,6 +45,7 @@ class Account:
         hrp: str = "cosmos",
         address_index: int = 0,
         protobuf: str = "cosmos",
+        eth: bool = False
     ):
         _protobuf_packages = {
             "cosmos": "cosmospy_protobuf",
@@ -53,6 +55,8 @@ class Account:
         _protobuf_package = (_protobuf_packages[protobuf.lower()]
                              if protobuf.lower() in _protobuf_packages.keys()
                              else protobuf)
+
+
         try:
             self.keys_pb2 = importlib.import_module(
                 _protobuf_package + ".cosmos.crypto.secp256k1.keys_pb2")
@@ -65,6 +69,7 @@ class Account:
                 f"Couldn't import from {_protobuf_package}. Is the package installed? "
             )
 
+        self._eth = eth
         self._slip44 = slip44
         self._hrp = hrp
         self._address_index = address_index
@@ -98,19 +103,40 @@ class Account:
     @property
     def address(self) -> str:
         """
-        Current address which depends on the hrp and the private key
+        Current address which depends on the hrp and the private key.
 
         Returns:
             Address
         """
         if not self._seed_phrase:
-            address = privkey_to_address(self._private_key, hrp=self._hrp)
+            address = privkey_to_address(self._private_key, hrp=self._hrp) if not self._eth else privkey_to_eth_address(self._private_key, hrp=self._hrp)
         else:
             sub_private_key = seed_to_private_key(
                 self._seed_phrase,
                 self._derivation_path(address_index=self._address_index),
             )
-            address = privkey_to_address(sub_private_key, hrp=self._hrp)
+            address = privkey_to_address(sub_private_key, hrp=self._hrp) if not self._eth else privkey_to_eth_address(sub_private_key, hrp=self._hrp)
+
+        return address
+
+    @property
+    def eth_address(self) -> str:
+        """
+        Ethereum compatible address starting with 0x. Only available if Account is initialised with eth set to True.
+
+        Returns:
+            Address
+        """
+        if not self._eth:
+            raise TypeError("Account hasn't been initialised with the eth mode set to true.")
+        if not self._seed_phrase:
+            address = privkey_to_eth_address(self._private_key)
+        else:
+            sub_private_key = seed_to_private_key(
+                self._seed_phrase,
+                self._derivation_path(address_index=self._address_index),
+            )
+            address = privkey_to_eth_address(sub_private_key)
 
         return address
 
@@ -223,6 +249,10 @@ class Account:
         """
         Current address prefix used by the Account.
 
+        Args:
+            hrp (str): New address prefix
+
+
         Returns:
             Address Prefix (hrp)
         """
@@ -233,9 +263,9 @@ class Account:
         self._hrp = hrp
 
     @property
-    def slip44(self, slip44: int) -> None:
-        """
-        Current slip44 value
+    def slip44(self) -> int:
+        """"
+        Set the Slip44 value. Cosmos defaults to 118
 
         Args:
             slip44 (int): New slip44 value as defined in the [slip44 registry](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
@@ -247,5 +277,23 @@ class Account:
         return self._slip44
 
     @slip44.setter
-    def set_slip44(self, slip44: int) -> None:
+    def slip44(self, slip44: int) -> None:
         self._slip44 = slip44
+
+    @property
+    def eth(self) -> bool:
+        """
+        Change the eth compatibility mode. If you want to use Evmos you will need to set eth to true. Otherwise it defaults to False
+
+        Args:
+            eth (bool): ETH compatibility mode
+
+        Returns:
+            eth
+          """
+        return self._eth
+
+    @eth.setter
+    def eth(self, eth: bool):
+
+        self._eth = eth
