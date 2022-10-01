@@ -28,6 +28,7 @@ class Account:
         hrp (str): Address Prefix
         address_index (int): Address index to get sub accounts for seed phrases (doesn't work when using a private key)
         protobuf (str): Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)
+        eth (bool): Etermint compatibility mpde. If set to true the addresses and signatures will match the ethereum standard. Defaults to false to match the Cosmos standard.
     """
 
     address: str
