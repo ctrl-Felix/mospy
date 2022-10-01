@@ -376,6 +376,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ethereumethermint-transaction" class="md-nav__link">
+    Ethereum/Ethermint Transaction
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -447,6 +454,13 @@
         <li class="md-nav__item">
   <a href="#client" class="md-nav__link">
     Client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ethereumethermint-transaction" class="md-nav__link">
+    Ethereum/Ethermint Transaction
   </a>
   
 </li>
@@ -564,6 +578,46 @@ client.load_account_data(account=account)
 # Note: Do not call 'get_tx_bytes' on the transaction object before 
 # as it will be signed twice then
 hash, code, log = client.broadcast_transaction(transaction=tx)
+</code></pre>
+<h2 id="ethereumethermint-transaction">Ethereum/Ethermint Transaction</h2>
+<p>Make a transaction on chains using Ethermint like Evmos</p>
+<pre><code class="language-python">from mospy import Transaction
+from mospy.clients import HTTPClient
+
+from src.mospy import Account
+
+# As the account query returns a different json than the standard cosmos one evmos won't be compatible with the 
+# client.load_account() function 
+account = Account(
+            seed_phrase=&quot;law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style&quot;,
+            hrp=&quot;evmos&quot;,
+            slip44=60,
+            eth=True,
+            next_sequence=1,
+            account_number=2154050,
+        )
+
+tx = Transaction(
+    account=account,
+    gas=2000000,
+    memo=&quot;The first mospy evmos transaction!&quot;,
+    chain_id=&quot;evmos_9001-2&quot;,
+)
+
+tx.set_fee(
+    denom=&quot;aevmos&quot;,
+    amount=40000000000000000
+)
+tx.add_msg(
+    tx_type=&quot;transfer&quot;,
+    sender=account,
+    receipient=account.address,
+    amount=3500000000000000,
+    denom=&quot;aevmos&quot;,
+)
+
+client = HTTPClient(api=&quot;https://api.evmos.interbloc.org&quot;)
+tx_response = client.broadcast_transaction(transaction=tx)
 </code></pre>
 
 
