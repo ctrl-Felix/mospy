@@ -418,7 +418,7 @@
           <td>
                 <code>bool</code>
           </td>
-          <td><p>Whether an ssl encrypted endpoint should be used</p></td>
+          <td><p>Whether a ssl encrypted endpoint should be used</p></td>
           <td>
                 <code>False</code>
           </td>
@@ -428,7 +428,7 @@
           <td>
                 <code>str</code>
           </td>
-          <td><p>Which protobuf files to use</p></td>
+          <td><p>Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)</p></td>
           <td>
                 <code>&#39;cosmos&#39;</code>
           </td>
@@ -555,15 +555,17 @@
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GRPCClient</span><span class="p">:</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GRPCClient</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class to interact with a cosmos chain through their grpc endpoint</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        host (str): URL to a Cosmos api node</span>
 <span class="sd">        port (int): Port to connect to</span>
-<span class="sd">        ssl (bool): Whether an ssl encrypted endpoint should be used</span>
-<span class="sd">        protobuf (str): Which protobuf files to use</span>
+<span class="sd">        ssl (bool): Whether a ssl encrypted endpoint should be used</span>
+<span class="sd">        protobuf (str): Define which protobuf files to use. Cosmos, Evmos and Osmosis are built in and otherwise pass the raw package name (cosmospy-protobuf)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -761,8 +763,7 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy/clients/GRPCClient.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
-<span class="normal"> 94</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
 <span class="normal"> 97</span>
@@ -794,7 +795,8 @@
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="o">*</span><span class="p">,</span>
                           <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
                           <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -874,8 +876,7 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy/clients/GRPCClient.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
-<span class="normal">71</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
@@ -895,7 +896,8 @@
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_account_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">):</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_account_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load the ``next_sequence`` and ``account_number`` into the account object.</span>
 
