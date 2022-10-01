@@ -3,6 +3,7 @@ import hashlib
 import importlib
 
 import ecdsa
+from _pysha3 import keccak_256
 from google.protobuf import any_pb2 as any
 from mospy._transactions import ALL_TRANSACTION_HELPERS
 from mospy.Account import Account
@@ -132,9 +133,13 @@ class Transaction:
     def _get_signatures(self):
         privkey = ecdsa.SigningKey.from_string(self._account.private_key,
                                                curve=ecdsa.SECP256k1)
+
+        # Cosmos uses sha256 as main hashing function while ethereum uses keccak256
+        hashfunc = hashlib.sha256 if not self._account.eth else keccak_256
+
         signature_compact = privkey.sign_deterministic(
             self._get_sign_doc().SerializeToString(),
-            hashfunc=hashlib.sha256,
+            hashfunc=hashfunc,
             sigencode=ecdsa.util.sigencode_string_canonize,
         )
         return signature_compact
@@ -158,6 +163,9 @@ class Transaction:
         signer_infos = self.tx_pb2.SignerInfo()
         signer_infos.sequence = self._account.next_sequence
         signer_infos.public_key.Pack(self._account.public_key)
-        signer_infos.public_key.type_url = "/cosmos.crypto.secp256k1.PubKey"
+        if self._account.eth:
+            signer_infos.public_key.type_url = "/ethermint.crypto.v1.ethsecp256k1.PubKey"
+        else:
+            signer_infos.public_key.type_url = "/cosmos.crypto.secp256k1.PubKey"
         signer_infos.mode_info.single.mode = 1
         return signer_infos
