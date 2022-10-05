@@ -74,3 +74,8 @@ pushable_tx = json.dumps(
               )
 r = httpx.post(rpc_api, data=pushable_tx)
 ```
+## Different transaction types
+
+Mospy is created to support every possible external transaction type.
+To make it easier some transaction types are built in and can be added directly to a transaction object.
+But it's not difficult to add your own transaction types! More about transaction types can be found in the docs.

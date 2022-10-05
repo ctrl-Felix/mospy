@@ -27,6 +27,6 @@ tx.set_fee(
 )
 
 
-tx.add_raw_msg(dmsg, type_url="/cosmos.staking.v1beta1.tx_pb2.MsgDelegate")
+tx.add_raw_msg(dmsg, type_url="/cosmos.staking.v1beta1.tx.MsgDelegate")
 
 client.broadcast_transaction(transaction=tx)

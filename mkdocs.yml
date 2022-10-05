@@ -8,7 +8,10 @@ plugins:
 nav:
   - Overview: "index.md"
   - "account.md"
-  - "transaction.md"
+  - Transaction:
+      - "transaction.md"
+      - "Transaction Types": "transaction/types.md"
+      - "Included Messages (Soon)": ""
   - Clients:
       - Overview: 'clients\index.md'
       - HTTPClient: 'clients\httpclient.md'

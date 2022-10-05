@@ -4,8 +4,11 @@ MosPy is a cosmospy fork and aims to be a versatile transaction signing library 
 
 ## Installation
 
-Currently the only way to install mospy is by installing it directly from the github repository:
-`python -m pip install git+https://github.com/ctrl-Felix/mospy.git `
+Mospy is available on [pypi](https://pypi.org/project/mospy-wallet/):
+
+`python -m pip install mospy-wallet `
+
+_Note: Even though the name is mospy-wallet on pypi the library itself is called mospy_
 
 ## Dependencies
 
