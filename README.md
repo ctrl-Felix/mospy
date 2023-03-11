@@ -7,6 +7,10 @@ It depends [cosmospy-protobuf](https://github.com/ctrl-Felix/cosmospy-protobuf) 
 
 A documentation with according examples can be found at https://mospy.ctrl-felix.de
 
+## Get Started
+
+You can find a tutorial series on medium: https://medium.com/@ctrl-felix/mospy-tutorial-1-the-basics-95ec757047dc
+
 ## Installation
 
 Mospy is available through (pypi)[https://pypi.org/project/mospy-wallet]
