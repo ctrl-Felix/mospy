@@ -6,4 +6,4 @@ hdwallets==0.1.2
 httpx==0.23.0
 mnemonic==0.20
 protobuf==4.22.1
-safe-pysha3==1.0.2
+safe-pysha3==1.0.3
