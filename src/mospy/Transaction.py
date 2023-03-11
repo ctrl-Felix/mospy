@@ -38,6 +38,7 @@ class Transaction:
         memo: str = "",
         chain_id: str = "cosmoshub-4",
         protobuf: str = "cosmos",
+        feegrant: str = ""
     ) -> None:
 
         _protobuf_packages = {
@@ -68,6 +69,7 @@ class Transaction:
         self._tx_body = self.tx_pb2.TxBody()
         self._tx_body.memo = memo
         self._tx_raw = self.tx_pb2.TxRaw()
+        self._feegrant = feegrant
 
     def add_msg(self, tx_type: str, **kwargs) -> None:
         """
@@ -157,6 +159,8 @@ class Transaction:
         _auth_info.signer_infos.append(self._get_signer_infos())
         _auth_info.fee.gas_limit = self._gas
         _auth_info.fee.amount.append(self._fee)
+        if self._feegrant:
+            _auth_info.fee.granter = self._feegrant
         return _auth_info
 
     def _get_signer_infos(self):
