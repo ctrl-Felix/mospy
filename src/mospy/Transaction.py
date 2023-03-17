@@ -3,7 +3,7 @@ import hashlib
 import importlib
 
 import ecdsa
-from _pysha3 import keccak_256
+from sha3 import keccak_256
 from google.protobuf import any_pb2 as any
 from mospy._transactions import ALL_TRANSACTION_HELPERS
 from mospy.Account import Account
@@ -106,6 +106,15 @@ class Transaction:
         """
         self._fee = self.coin_pb2.Coin(amount=str(amount), denom=denom)
 
+    def set_gas(self, gas: int):
+        """
+        Update the wanted gas for the transaction
+
+        Args:
+            gas: Gas
+        """
+        self._gas = gas
+
     def get_tx_bytes(self) -> bytes:
         """Sign the transaction and get the tx bytes which can be used to broadcast the transaction to the network.
 
@@ -114,6 +123,7 @@ class Transaction:
         Returns:
             tx_bytes (bytes): Transaction bytes
         """
+        self._tx_raw = self.tx_pb2.TxRaw()
         self._tx_raw.body_bytes = self._tx_body.SerializeToString()
         self._tx_raw.auth_info_bytes = self._get_auth_info().SerializeToString(
         )

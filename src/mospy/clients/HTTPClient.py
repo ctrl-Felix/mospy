@@ -1,6 +1,10 @@
+import copy
+
 import httpx
 from mospy.Account import Account
 from mospy.Transaction import Transaction
+
+from mospy.exceptions.clients import NodeException
 
 
 class HTTPClient:
@@ -14,6 +18,20 @@ class HTTPClient:
     def __init__(self, *, api: str = "https://api.cosmos.interbloc.org"):
         self._api = api
 
+    def _make_post_request(self, path, payload, timeout):
+        req = httpx.post(self._api + path, json=payload, timeout=timeout)
+
+        if req.status_code != 200:
+            try:
+                data = req.json()
+                message = f"({data['message']}"
+            except:
+                message = ""
+            raise NodeException(f"Error while doing request to api endpoint {message}")
+
+        data = req.json()
+        return data
+
     def load_account_data(self, account: Account):
         """
         Load the ``next_sequence`` and ``account_number`` into the account object.
@@ -26,7 +44,7 @@ class HTTPClient:
         url = self._api + "/cosmos/auth/v1beta1/accounts/" + address
         req = httpx.get(url=url)
         if req.status_code != 200:
-            raise RuntimeError("Error while doing request to api endpoint")
+            raise NodeException("Error while doing request to api endpoint")
 
         data = req.json()
         sequence = int(data["account"]["sequence"])
@@ -54,18 +72,45 @@ class HTTPClient:
             code: Result code
             log: Log (None if transaction successful)
         """
-        url = self._api + "/cosmos/tx/v1beta1/txs"
+        path = "/cosmos/tx/v1beta1/txs"
         tx_bytes = transaction.get_tx_bytes_as_string()
-        pushable_tx = {"tx_bytes": tx_bytes, "mode": "BROADCAST_MODE_SYNC"}
+        payload = {"tx_bytes": tx_bytes, "mode": "BROADCAST_MODE_SYNC"}
 
-        req = httpx.post(url, json=pushable_tx, timeout=timeout)
+        data = self._make_post_request(path, payload, timeout)
 
-        if req.status_code != 200:
-            raise RuntimeError("Error while doing request to api endpoint")
-
-        data = req.json()
         hash = data["tx_response"]["txhash"]
         code = data["tx_response"]["code"]
         log = None if code == 0 else data["tx_response"]["raw_log"]
 
         return {"hash": hash, "code": code, "log": log}
+
+    def estimate_gas(self,
+                              *,
+                              transaction: Transaction,
+                              update: bool = True,
+                              timeout: int = 10) ->int:
+        """
+        Simulate a transaction to get the estimated gas usage.
+
+        Note:
+            Takes only positional arguments
+
+        Args:
+            transaction (Transaction): The transaction object
+            update (bool): Update the transaction with the estimated gas amount
+            timeout (int): Timeout
+
+        Returns:
+            expedted_gas: Expected gas
+        """
+        path = "/cosmos/tx/v1beta1/simulate"
+        tx_bytes = transaction.get_tx_bytes_as_string()
+        payload = {"tx_bytes": tx_bytes}
+
+        data = self._make_post_request(path, payload, timeout)
+
+        gas_used = int(data["gas_info"]["gas_used"])
+
+        if update:
+            transaction.set_gas(gas_used)
+        return gas_used

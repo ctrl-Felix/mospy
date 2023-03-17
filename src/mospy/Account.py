@@ -1,6 +1,5 @@
 import importlib
 
-import hdwallets
 from mnemonic import Mnemonic
 from mospy.utils import privkey_to_address
 from mospy.utils import privkey_to_pubkey

@@ -1,3 +1,5 @@
+import copy
+
 from cosmospy_protobuf.cosmos.base.v1beta1.coin_pb2 import Coin
 from mospy import Account
 from mospy import Transaction
@@ -42,9 +44,19 @@ class TestHTTPClientClass:
             amount=1000,
             denom="uatom",
         )
-
-        tx_data = client.broadcast_transaction(transaction=tx)
+        copied_transaction = copy.copy(tx)
+        tx_data = client.broadcast_transaction(transaction=copied_transaction)
 
         assert (
             tx_data["hash"] ==
             "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+
+        client.load_account_data(account=account)
+
+        gas_wanted = client.estimate_gas(
+            transaction=tx,
+            update=False,
+        )
+
+
+        assert gas_wanted > 0
