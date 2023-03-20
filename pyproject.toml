@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mospy-wallet"
-version = "0.3.6"
+version = "0.3.7"
 description = "This package is a fork of cosmospy and is a light framework for the cosmos ecosystem"
 authors = [
     { name = "ctrl-felix", email = "dev@ctrl-felix.de" },
