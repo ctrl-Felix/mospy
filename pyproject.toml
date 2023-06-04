@@ -25,7 +25,8 @@ dependencies = [
     "bech32==1.2.0",
     "mnemonic==0.20",
     "hdwallets==0.1.2",
-    "safe-pysha3==1.0.3"
+    "safe-pysha3==1.0.3;python_version>='3.9'",
+    "pysha3==1.0.2;python_version<'3.9'",
 ]
 dynamic = []
 
