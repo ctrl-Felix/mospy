@@ -6,4 +6,5 @@ hdwallets==0.1.2
 httpx==0.23.0
 mnemonic==0.20
 protobuf==4.22.1
-safe-pysha3==1.0.3
+safe-pysha3==1.0.3;python_version>='3.9'
+pysha3==1.0.2;python_version<'3.9'
