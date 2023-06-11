@@ -659,7 +659,10 @@
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPClient</span><span class="p">:</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HTTPClient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class to interact with a cosmos chain through their API endpoint</span>
 
@@ -740,6 +743,7 @@
                               <span class="o">*</span><span class="p">,</span>
                               <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
                               <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
                               <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span><span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simulate a transaction to get the estimated gas usage.</span>
@@ -750,6 +754,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            transaction (Transaction): The transaction object</span>
 <span class="sd">            update (bool): Update the transaction with the estimated gas amount</span>
+<span class="sd">            multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</span>
 <span class="sd">            timeout (int): Timeout</span>
 
 <span class="sd">        Returns:</span>
@@ -764,7 +769,8 @@
         <span class="n">gas_used</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;gas_info&quot;</span><span class="p">][</span><span class="s2">&quot;gas_used&quot;</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
-            <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="n">gas_used</span><span class="p">)</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gas_used</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">gas_used</span>
 </code></pre></div></td></tr></table></div>
         </details>
@@ -935,7 +941,7 @@
 
 
 <h2 id="mospy.clients.HTTPClient.HTTPClient.estimate_gas" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">estimate_gas</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">estimate_gas</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
 
 </h2>
 
@@ -977,6 +983,16 @@
           <td><p>Update the transaction with the estimated gas amount</p></td>
           <td>
                 <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>multiplier</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</p></td>
+          <td>
+                <code>1.2</code>
           </td>
         </tr>
         <tr>
@@ -1041,10 +1057,14 @@
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">estimate_gas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">estimate_gas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="o">*</span><span class="p">,</span>
                           <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
                           <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                          <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
                           <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span><span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simulate a transaction to get the estimated gas usage.</span>
@@ -1055,6 +1075,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        transaction (Transaction): The transaction object</span>
 <span class="sd">        update (bool): Update the transaction with the estimated gas amount</span>
+<span class="sd">        multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</span>
 <span class="sd">        timeout (int): Timeout</span>
 
 <span class="sd">    Returns:</span>
@@ -1069,7 +1090,8 @@
     <span class="n">gas_used</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;gas_info&quot;</span><span class="p">][</span><span class="s2">&quot;gas_used&quot;</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
-        <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="n">gas_used</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gas_used</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">))</span>
+
     <span class="k">return</span> <span class="n">gas_used</span>
 </code></pre></div></td></tr></table></div>
       </details>

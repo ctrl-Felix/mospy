@@ -402,6 +402,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mospy.clients.GRPCClient.GRPCClient.estimate_gas" class="md-nav__link">
+    estimate_gas()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mospy.clients.GRPCClient.GRPCClient.load_account_data" class="md-nav__link">
     load_account_data()
   </a>
@@ -474,6 +481,13 @@
         <li class="md-nav__item">
   <a href="#mospy.clients.GRPCClient.GRPCClient.broadcast_transaction" class="md-nav__link">
     broadcast_transaction()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mospy.clients.GRPCClient.GRPCClient.estimate_gas" class="md-nav__link">
+    estimate_gas()
   </a>
   
 </li>
@@ -686,7 +700,48 @@
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GRPCClient</span><span class="p">:</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GRPCClient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class to interact with a cosmos chain through their grpc endpoint</span>
 
@@ -716,15 +771,19 @@
                              <span class="k">if</span> <span class="n">protobuf</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">_protobuf_packages</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
                              <span class="k">else</span> <span class="n">protobuf</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">BroadcastTxRequest</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
                 <span class="n">_protobuf_package</span> <span class="o">+</span>
-                <span class="s2">&quot;.cosmos.tx.v1beta1.service_pb2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">BroadcastTxRequest</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+                <span class="s2">&quot;.cosmos.tx.v1beta1.service_pb2&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
                 <span class="n">_protobuf_package</span> <span class="o">+</span> <span class="s2">&quot;.cosmos.auth.v1beta1.query_pb2&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2_grpc</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2_grpc</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
                 <span class="n">_protobuf_package</span> <span class="o">+</span> <span class="s2">&quot;.cosmos.auth.v1beta1.query_pb2_grpc&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">service_pb2_grpc</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2_grpc</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
                 <span class="n">_protobuf_package</span> <span class="o">+</span> <span class="s2">&quot;.cosmos.tx.v1beta1.service_pb2_grpc&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_BroadcastTxRequest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2</span><span class="o">.</span><span class="n">BroadcastTxRequest</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_SimulateTxRequest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2</span><span class="o">.</span><span class="n">SimulateRequest</span>
+
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
                 <span class="s2">&quot;It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information.&quot;</span>
@@ -757,8 +816,8 @@
         <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">address</span>
 
-        <span class="n">query_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2_grpc</span><span class="o">.</span><span class="n">QueryStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
-        <span class="n">account_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2</span><span class="o">.</span><span class="n">QueryAccountRequest</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">)</span>
+        <span class="n">query_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2_grpc</span><span class="o">.</span><span class="n">QueryStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+        <span class="n">account_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2</span><span class="o">.</span><span class="n">QueryAccountRequest</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">)</span>
 
         <span class="n">req</span> <span class="o">=</span> <span class="n">query_stub</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span><span class="n">account_request</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">MessageToDict</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">account</span><span class="p">))</span>
@@ -791,12 +850,12 @@
         <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
         <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
 
-        <span class="n">tx_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BroadcastTxRequest</span><span class="p">(</span>
+        <span class="n">tx_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_BroadcastTxRequest</span><span class="p">(</span>
             <span class="n">tx_bytes</span><span class="o">=</span><span class="n">tx_bytes</span><span class="p">,</span>
             <span class="n">mode</span><span class="o">=</span><span class="mi">2</span>  <span class="c1"># BROADCAST_MODE_SYNC</span>
         <span class="p">)</span>
 
-        <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+        <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
         <span class="n">tx_data</span> <span class="o">=</span> <span class="n">tx_stub</span><span class="o">.</span><span class="n">BroadcastTx</span><span class="p">(</span><span class="n">tx_request</span><span class="p">)</span>
 
         <span class="nb">hash</span> <span class="o">=</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">tx_response</span><span class="o">.</span><span class="n">txhash</span>
@@ -804,6 +863,43 @@
         <span class="n">log</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">tx_response</span><span class="o">.</span><span class="n">raw_log</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="n">log</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">estimate_gas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="o">*</span><span class="p">,</span>
+                              <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
+                              <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                              <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span>
+                     <span class="p">)</span> <span class="o">-&gt;</span><span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulate a transaction to get the estimated gas usage.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Takes only positional arguments</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction (Transaction): The transaction object</span>
+<span class="sd">            update (bool): Update the transaction with the estimated gas amount</span>
+<span class="sd">            multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            expedted_gas: Expected gas</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+        <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
+
+        <span class="n">simulate_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SimulateTxRequest</span><span class="p">(</span>
+            <span class="n">tx_bytes</span><span class="o">=</span><span class="n">tx_bytes</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+        <span class="n">tx_data</span> <span class="o">=</span> <span class="n">tx_stub</span><span class="o">.</span><span class="n">Simulate</span><span class="p">(</span><span class="n">simulate_request</span><span class="p">)</span>
+
+        <span class="n">gas_used</span> <span class="o">=</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">gas_info</span><span class="o">.</span><span class="n">gas_used</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gas_used</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">gas_used</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -893,11 +989,7 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy/clients/GRPCClient.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
@@ -926,7 +1018,11 @@
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">broadcast_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                           <span class="o">*</span><span class="p">,</span>
                           <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
                           <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -947,12 +1043,12 @@
     <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
     <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
 
-    <span class="n">tx_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BroadcastTxRequest</span><span class="p">(</span>
+    <span class="n">tx_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_BroadcastTxRequest</span><span class="p">(</span>
         <span class="n">tx_bytes</span><span class="o">=</span><span class="n">tx_bytes</span><span class="p">,</span>
         <span class="n">mode</span><span class="o">=</span><span class="mi">2</span>  <span class="c1"># BROADCAST_MODE_SYNC</span>
     <span class="p">)</span>
 
-    <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+    <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
     <span class="n">tx_data</span> <span class="o">=</span> <span class="n">tx_stub</span><span class="o">.</span><span class="n">BroadcastTx</span><span class="p">(</span><span class="n">tx_request</span><span class="p">)</span>
 
     <span class="nb">hash</span> <span class="o">=</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">tx_response</span><span class="o">.</span><span class="n">txhash</span>
@@ -960,6 +1056,165 @@
     <span class="n">log</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">tx_response</span><span class="o">.</span><span class="n">raw_log</span>
 
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="n">log</span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="mospy.clients.GRPCClient.GRPCClient.estimate_gas" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">estimate_gas</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Simulate a transaction to get the estimated gas usage.</p>
+
+<details class="note">
+  <summary>Note</summary>
+  <p>Takes only positional arguments</p>
+</details>
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>transaction</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="mospy.Transaction.Transaction" href="../../transaction/#mospy.Transaction.Transaction">Transaction</a></code>
+          </td>
+          <td><p>The transaction object</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>update</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Update the transaction with the estimated gas amount</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>multiplier</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</p></td>
+          <td>
+                <code>1.2</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>expedted_gas</code></td>          <td>
+                <code>int</code>
+          </td>
+          <td><p>Expected gas</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>mospy/clients/GRPCClient.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">estimate_gas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span>
+                          <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                          <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span><span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulate a transaction to get the estimated gas usage.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Takes only positional arguments</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction (Transaction): The transaction object</span>
+<span class="sd">        update (bool): Update the transaction with the estimated gas amount</span>
+<span class="sd">        multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        expedted_gas: Expected gas</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+    <span class="n">tx_bytes</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">get_tx_bytes</span><span class="p">()</span>
+
+    <span class="n">simulate_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SimulateTxRequest</span><span class="p">(</span>
+        <span class="n">tx_bytes</span><span class="o">=</span><span class="n">tx_bytes</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">tx_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_tx_service_pb2_grpc</span><span class="o">.</span><span class="n">ServiceStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+    <span class="n">tx_data</span> <span class="o">=</span> <span class="n">tx_stub</span><span class="o">.</span><span class="n">Simulate</span><span class="p">(</span><span class="n">simulate_request</span><span class="p">)</span>
+
+    <span class="n">gas_used</span> <span class="o">=</span> <span class="n">tx_data</span><span class="o">.</span><span class="n">gas_info</span><span class="o">.</span><span class="n">gas_used</span>
+
+    <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">set_gas</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">gas_used</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">gas_used</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1006,11 +1261,7 @@
 
       <details class="quote">
         <summary>Source code in <code>mospy/clients/GRPCClient.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
@@ -1027,7 +1278,11 @@
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_account_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">):</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_account_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="n">Account</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load the ``next_sequence`` and ``account_number`` into the account object.</span>
 
@@ -1037,8 +1292,8 @@
     <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">address</span>
 
-    <span class="n">query_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2_grpc</span><span class="o">.</span><span class="n">QueryStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
-    <span class="n">account_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_pb2</span><span class="o">.</span><span class="n">QueryAccountRequest</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">)</span>
+    <span class="n">query_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2_grpc</span><span class="o">.</span><span class="n">QueryStub</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+    <span class="n">account_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cosmos_auth_query_pb2</span><span class="o">.</span><span class="n">QueryAccountRequest</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">)</span>
 
     <span class="n">req</span> <span class="o">=</span> <span class="n">query_stub</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span><span class="n">account_request</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">MessageToDict</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">account</span><span class="p">))</span>
