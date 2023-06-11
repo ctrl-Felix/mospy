@@ -99,7 +99,7 @@ class HTTPClient:
         Args:
             transaction (Transaction): The transaction object
             update (bool): Update the transaction with the estimated gas amount
-            update (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2
+            multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2
             timeout (int): Timeout
 
         Returns:
@@ -114,6 +114,6 @@ class HTTPClient:
         gas_used = int(data["gas_info"]["gas_used"])
 
         if update:
-
             transaction.set_gas(int(gas_used * multiplier))
+
         return gas_used

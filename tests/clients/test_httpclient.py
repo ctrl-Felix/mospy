@@ -53,10 +53,11 @@ class TestHTTPClientClass:
 
         client.load_account_data(account=account)
 
-        gas_wanted = client.estimate_gas(
+        gas_used = client.estimate_gas(
             transaction=tx,
             update=False,
         )
 
 
-        assert gas_wanted > 0
+        assert gas_used > 0
+

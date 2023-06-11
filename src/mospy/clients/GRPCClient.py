@@ -37,15 +37,19 @@ class GRPCClient:
                              if protobuf.lower() in _protobuf_packages.keys()
                              else protobuf)
         try:
-            self.BroadcastTxRequest = importlib.import_module(
+            self._cosmos_tx_service_pb2 = importlib.import_module(
                 _protobuf_package +
-                ".cosmos.tx.v1beta1.service_pb2").BroadcastTxRequest
-            self.query_pb2 = importlib.import_module(
+                ".cosmos.tx.v1beta1.service_pb2")
+            self._cosmos_auth_query_pb2 = importlib.import_module(
                 _protobuf_package + ".cosmos.auth.v1beta1.query_pb2")
-            self.query_pb2_grpc = importlib.import_module(
+            self._cosmos_auth_query_pb2_grpc = importlib.import_module(
                 _protobuf_package + ".cosmos.auth.v1beta1.query_pb2_grpc")
-            self.service_pb2_grpc = importlib.import_module(
+            self._cosmos_tx_service_pb2_grpc = importlib.import_module(
                 _protobuf_package + ".cosmos.tx.v1beta1.service_pb2_grpc")
+
+            self._BroadcastTxRequest = self._cosmos_tx_service_pb2.BroadcastTxRequest
+            self._SimulateTxRequest = self._cosmos_tx_service_pb2.SimulateRequest
+
         except AttributeError:
             raise ImportError(
                 "It seems that you are importing conflicting protobuf files. Have sou set the protobuf attribute to specify your coin? Check out the documentation for more information."
@@ -78,8 +82,8 @@ class GRPCClient:
         con = self._connect()
         address = account.address
 
-        query_stub = self.query_pb2_grpc.QueryStub(con)
-        account_request = self.query_pb2.QueryAccountRequest(address=address)
+        query_stub = self._cosmos_auth_query_pb2_grpc.QueryStub(con)
+        account_request = self._cosmos_auth_query_pb2.QueryAccountRequest(address=address)
 
         req = query_stub.Account(account_request)
         data = dict(MessageToDict(req.account))
@@ -112,12 +116,12 @@ class GRPCClient:
         con = self._connect()
         tx_bytes = transaction.get_tx_bytes()
 
-        tx_request = self.BroadcastTxRequest(
+        tx_request = self._BroadcastTxRequest(
             tx_bytes=tx_bytes,
             mode=2  # BROADCAST_MODE_SYNC
         )
 
-        tx_stub = self.service_pb2_grpc.ServiceStub(con)
+        tx_stub = self._cosmos_tx_service_pb2_grpc.ServiceStub(con)
         tx_data = tx_stub.BroadcastTx(tx_request)
 
         hash = tx_data.tx_response.txhash
@@ -125,3 +129,40 @@ class GRPCClient:
         log = None if code == 0 else tx_data.tx_response.raw_log
 
         return {"hash": hash, "code": code, "log": log}
+
+    def estimate_gas(self,
+                              *,
+                              transaction: Transaction,
+                              update: bool = True,
+                              multiplier: float = 1.2
+                     ) ->int:
+        """
+        Simulate a transaction to get the estimated gas usage.
+
+        Note:
+            Takes only positional arguments
+
+        Args:
+            transaction (Transaction): The transaction object
+            update (bool): Update the transaction with the estimated gas amount
+            multiplier (float): Multiplier for the estimated gas when updating the transaction. Defaults to 1.2
+
+        Returns:
+            expedted_gas: Expected gas
+        """
+        con = self._connect()
+        tx_bytes = transaction.get_tx_bytes()
+
+        simulate_request = self._SimulateTxRequest(
+            tx_bytes=tx_bytes,
+        )
+
+        tx_stub = self._cosmos_tx_service_pb2_grpc.ServiceStub(con)
+        tx_data = tx_stub.Simulate(simulate_request)
+
+        gas_used = tx_data.gas_info.gas_used
+
+        if update:
+            transaction.set_gas(int(gas_used * multiplier))
+
+        return gas_used
