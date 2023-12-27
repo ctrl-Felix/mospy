@@ -130,6 +130,11 @@ class GRPCClient:
 
         return {"hash": hash, "code": code, "log": log}
 
+    def get_tx(self, tx_hash: str):
+        con = self._connect()
+        tx_stub = self._cosmos_tx_service_pb2_grpc.ServiceStub(con)
+        return tx_stub.GetTx(self._cosmos_tx_service_pb2.GetTxRequest(hash=tx_hash))
+
     def estimate_gas(self,
                               *,
                               transaction: Transaction,
