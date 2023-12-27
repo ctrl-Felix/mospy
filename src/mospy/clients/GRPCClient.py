@@ -32,6 +32,7 @@ class GRPCClient:
             "cosmos": "cosmospy_protobuf",
             "osmosis": "osmosis_protobuf",
             "evmos": "evmos_protobuf",
+            "sentinel": "sentinel_protobuf",
         }
         _protobuf_package = (_protobuf_packages[protobuf.lower()]
                              if protobuf.lower() in _protobuf_packages.keys()

@@ -1,5 +1,5 @@
 bech32==1.2.0
-cosmospy_protobuf>=0.2.0
+sentinel_protobuf>=0.3.3
 ecdsa==0.17.0
 grpcio~=1.47.0
 hdwallets==0.1.2
