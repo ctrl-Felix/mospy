@@ -1,4 +1,5 @@
 import base64
+import time
 import importlib
 
 import grpc
@@ -134,6 +135,16 @@ class GRPCClient:
         con = self._connect()
         tx_stub = self._cosmos_tx_service_pb2_grpc.ServiceStub(con)
         return tx_stub.GetTx(self._cosmos_tx_service_pb2.GetTxRequest(hash=tx_hash))
+
+    def wait_tx(self, tx_hash: str, timeout: float = 60, pool_period: float = 10):
+        start = time.time()
+        while 1:
+            try:
+                return self.get_tx(tx_hash)
+            except grpc.RpcError:
+                if time.time() - start > timeout:
+                    return None
+                time.sleep(pool_period)
 
     def estimate_gas(self,
                               *,
