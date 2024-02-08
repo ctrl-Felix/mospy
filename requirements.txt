@@ -1,9 +1,9 @@
 bech32==1.2.0
-cosmospy_protobuf
+cosmospy_protobuf>=0.2.0
 ecdsa==0.17.0
 grpcio~=1.47.0
 hdwallets==0.1.2
-httpx==0.23.0
+httpx~=0.23.0
 mnemonic==0.20
 protobuf==4.22.1
 safe-pysha3==1.0.3;python_version>='3.9'
