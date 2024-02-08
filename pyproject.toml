@@ -21,7 +21,7 @@ dependencies = [
     "grpcio>=1.51.3",
     "httpx>=0.23.0",
     "cosmospy-protobuf==0.0.2",
-    "ecdsa>=0.17.0",
+    "ecdsa>=0.18.0",
     "bech32>=1.2.0",
     "mnemonic>=0.20",
     "hdwallets>=0.1.2",
