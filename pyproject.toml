@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mospy-wallet"
-version = "0.4"
+version = "0.5.1"
 description = "This package is a fork of cosmospy and is a light framework for the cosmos ecosystem"
 authors = [
     { name = "ctrl-felix", email = "dev@ctrl-felix.de" },
@@ -17,15 +17,15 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "protobuf==4.22.1",
-    "grpcio~=1.51.3",
-    "httpx==0.23.0",
+    "protobuf>=4.22.1",
+    "grpcio>=1.51.3",
+    "httpx>=0.23.0",
     "cosmospy-protobuf==0.0.2",
-    "ecdsa==0.17.0",
-    "bech32==1.2.0",
-    "mnemonic==0.20",
-    "hdwallets==0.1.2",
-    "safe-pysha3==1.0.3;python_version>='3.9'",
+    "ecdsa>=0.17.0",
+    "bech32>=1.2.0",
+    "mnemonic>=0.20",
+    "hdwallets>=0.1.2",
+    "safe-pysha3>=1.0.3;python_version>='3.9'",
     "pysha3==1.0.2;python_version<'3.9'",
 ]
 dynamic = []

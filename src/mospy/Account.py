@@ -45,7 +45,8 @@ class Account:
         hrp: str = "cosmos",
         address_index: int = 0,
         protobuf: str = "cosmos",
-        eth: bool = False
+        eth: bool = False,
+        public_key_type: str = None
     ):
         _protobuf_packages = {
             "cosmos": "cosmospy_protobuf",
@@ -75,6 +76,20 @@ class Account:
         self._address_index = address_index
         self._next_sequence = next_sequence
         self._account_number = account_number
+
+        # Set the public key type
+        if public_key_type:
+            self._public_key_type = public_key_type
+        else:
+            if eth:
+                # Add Injectiver as exception as they use ethermint but with their own definition
+                # Otherwise default to ethermint
+                if hrp == "inj":
+                    self._public_key_type = "/injective.crypto.v1beta1.ethsecp256k1.PubKey"
+                else:
+                    self._public_key_type = "/ethermint.crypto.v1.ethsecp256k1.PubKey"
+            else:
+                self._public_key_type = "/cosmos.crypto.secp256k1.PubKey"
 
         if not seed_phrase and not private_key:
             self._seed_phrase = Mnemonic(language="english").generate(
@@ -185,8 +200,6 @@ class Account:
         """
         On-chain account number which will be assigned when the address receives coins for the first time.
 
-        Args:
-            account_number (int): Account Number
         Returns:
             Account number
         """
@@ -200,9 +213,6 @@ class Account:
     def next_sequence(self) -> int:
         """
         Sequence which will be used for transactions signed with this Account.
-
-        Args:
-            next_sequence (int): Next sequence (only when used as setter)
 
         Returns:
             Next Sequence
@@ -227,8 +237,6 @@ class Account:
         """
         Change the address index to use a sub account. This works only if a seed has been used to instantiate the Account.
 
-        Args:
-            address_index (int): New address index
 
         Returns:
             Address Index
@@ -249,10 +257,6 @@ class Account:
         """
         Current address prefix used by the Account.
 
-        Args:
-            hrp (str): New address prefix
-
-
         Returns:
             Address Prefix (hrp)
         """
@@ -264,11 +268,8 @@ class Account:
 
     @property
     def slip44(self) -> int:
-        """"
+        """
         Set the Slip44 value. Cosmos defaults to 118
-
-        Args:
-            slip44 (int): New slip44 value as defined in the [slip44 registry](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
 
         Returns:
             Slip44
@@ -285,9 +286,6 @@ class Account:
         """
         Change the eth compatibility mode. If you want to use Evmos you will need to set eth to true. Otherwise it defaults to False
 
-        Args:
-            eth (bool): ETH compatibility mode
-
         Returns:
             eth
           """
@@ -297,3 +295,16 @@ class Account:
     def eth(self, eth: bool):
 
         self._eth = eth
+
+    @property
+    def public_key_type(self):
+        """
+        Get the current pyblic key type
+
+        Returns:
+            public_key_type
+          """
+        return self._public_key_type
+    @public_key_type.setter
+    def public_key_type(self, public_key_type):
+        self._public_key_type = public_key_type

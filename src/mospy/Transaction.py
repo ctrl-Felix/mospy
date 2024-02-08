@@ -177,9 +177,6 @@ class Transaction:
         signer_infos = self.tx_pb2.SignerInfo()
         signer_infos.sequence = self._account.next_sequence
         signer_infos.public_key.Pack(self._account.public_key)
-        if self._account.eth:
-            signer_infos.public_key.type_url = "/ethermint.crypto.v1.ethsecp256k1.PubKey"
-        else:
-            signer_infos.public_key.type_url = "/cosmos.crypto.secp256k1.PubKey"
+        signer_infos.public_key.type_url = self._account.public_key_type
         signer_infos.mode_info.single.mode = 1
         return signer_infos
