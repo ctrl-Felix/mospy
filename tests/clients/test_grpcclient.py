@@ -31,34 +31,49 @@ class TestGRPCClientClass:
                             port=443,
                             ssl=True)
 
-        fee = Coin(denom="uatom", amount="1000")
+        client.load_account_data(account=account)
+
+        fee = Coin(denom="uatom", amount="1500")
 
         tx = Transaction(
             account=account,
             fee=fee,
             gas=10000000000,
+            memo="This is a mospy test transaction"
         )
 
         tx.add_msg(
             tx_type="transfer",
             sender=account,
-            receipient="cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9",
+            receipient=account.address,
             amount=1000,
             denom="uatom",
         )
 
+        expected_gas = client.estimate_gas(transaction=tx)
+
+        assert expected_gas > 0
+
         tx_data = client.broadcast_transaction(transaction=tx)
 
-        assert (
-            tx_data["hash"] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+        assert tx_data["code"] == 0
 
-
-        client.load_account_data(account=account)
-
-        gas_used = client.estimate_gas(
-            transaction=tx,
-            update=False,
+        transaction_dict = client.wait_for_tx(
+            tx_hash=tx_data["hash"]
         )
 
-        assert gas_used > 0
+        assert "tx" in transaction_dict and transaction_dict["tx"]["body"]["messages"][0] == {
+            "@type": "/cosmos.bank.v1beta1.MsgSend",
+            "fromAddress": account.address,
+            "toAddress": account.address,
+            "amount": [
+                {
+                    "denom": "uatom",
+                    "amount": "1000"
+                }
+            ]
+        }
+
+
+
+
