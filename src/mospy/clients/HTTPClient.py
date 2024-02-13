@@ -1,10 +1,12 @@
 import copy
+import time
 
 import httpx
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
 from mospy.exceptions.clients import NodeException
+from src.mospy.exceptions.clients import NodeTimeoutException, TransactionNotFound, TransactionTimeout
 
 
 class HTTPClient:
@@ -19,7 +21,10 @@ class HTTPClient:
         self._api = api
 
     def _make_post_request(self, path, payload, timeout):
-        req = httpx.post(self._api + path, json=payload, timeout=timeout)
+        try:
+            req = httpx.post(self._api + path, json=payload, timeout=timeout)
+        except httpx.TimeoutException:
+            raise NodeTimeoutException(f"Node {self._api} timed out after {timeout} seconds")
 
         if req.status_code != 200:
             try:
@@ -31,6 +36,23 @@ class HTTPClient:
 
         data = req.json()
         return data
+
+    def _make_get_request(self, path, timeout):
+        try:
+            req = httpx.get(self._api + path, timeout=timeout)
+        except httpx.TimeoutException:
+            raise NodeTimeoutException(f"Node {self._api} timed out after {timeout} seconds")
+        if req.status_code != 200:
+            try:
+                data = req.json()
+                message = f"({data['message']}"
+            except:
+                message = ""
+            raise NodeException(f"Error while doing request to api endpoint {message}")
+
+        data = req.json()
+        return data
+
 
     def load_account_data(self, account: Account):
         """
@@ -117,3 +139,53 @@ class HTTPClient:
             transaction.set_gas(int(gas_used * multiplier))
 
         return gas_used
+
+    def get_tx(self, *, tx_hash: str, timeout: int = 5):
+        """
+        Query a transaction by passing the hash
+
+        Note:
+            Takes only positional arguments.
+
+        Args:
+            tx_hash (Transaction): The transaction hash
+            timeout (int): Timeout for the request before throwing a NodeException
+
+        Returns:
+            transaction (dict): Transaction dict as returned by the chain
+
+
+        """
+        path = "/cosmos/tx/v1beta1/txs/" + tx_hash
+
+        try:
+            data = self._make_get_request(path=path, timeout=timeout)
+        except NodeException:
+            raise TransactionNotFound(f"The transaction {tx_hash} couldn't be found")
+
+        return data
+
+
+    def wait_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
+        """
+        Waits for a transaction hash to hit the chain.
+
+        Note:
+            Takes only positional arguments
+
+        Args:
+            tx_hash (Transaction): The transaction hash
+            timeout (bool): Time to wait before throwing a TransactionTimeout. Defaults to 60
+            poll_period (float): Time to wait between each check. Defaults to 10
+
+        Returns:
+            transaction (dict): Transaction dict as returned by the chain
+        """
+        start = time.time()
+        while time.time() < (start + timeout):
+            try:
+                return self.get_tx(tx_hash=tx_hash)
+            except TransactionNotFound:
+                time.sleep(poll_period)
+
+        raise TransactionTimeout(f"The transaction {tx_hash} couldn't be found on chain within {timeout} seconds.")

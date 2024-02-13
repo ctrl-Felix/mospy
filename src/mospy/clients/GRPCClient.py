@@ -7,6 +7,8 @@ from google.protobuf.json_format import MessageToDict
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
+from src.mospy.exceptions.clients import TransactionNotFound, TransactionTimeout
+
 
 class GRPCClient:
     """
@@ -132,21 +134,51 @@ class GRPCClient:
 
         return {"hash": hash, "code": code, "log": log}
 
-    def get_tx(self, tx_hash: str):
+    def get_tx(self, *, tx_hash: str):
+        """
+        Query a transaction by passing the hash
+
+        Note:
+            Takes only positional arguments.
+
+        Args:
+            tx_hash (Transaction): The transaction hash
+
+        Returns:
+            transaction (dict): Transaction dict as returned by the chain
+
+
+        """
         con = self._connect()
         tx_stub = self._cosmos_tx_service_pb2_grpc.ServiceStub(con)
-        return tx_stub.GetTx(self._cosmos_tx_service_pb2.GetTxRequest(hash=tx_hash))
+        try:
+            return MessageToDict(tx_stub.GetTx(self._cosmos_tx_service_pb2.GetTxRequest(hash=tx_hash)))
+        except grpc.RpcError:
+            raise TransactionNotFound(f"The transaction {tx_hash} couldn't be found on chain.")
 
-    def wait_tx(self, tx_hash: str, timeout: float = 60, pool_period: float = 10):
+    def wait_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
+        """
+        Waits for a transaction hash to hit the chain.
+
+        Note:
+            Takes only positional arguments
+
+        Args:
+            tx_hash (Transaction): The transaction hash
+            timeout (bool): Time to wait before throwing a TransactionTimeout. Defaults to 60
+            poll_period (float): Time to wait between each check. Defaults to 10
+
+        Returns:
+            transaction (dict): Transaction dict as returned by the chain
+        """
         start = time.time()
-        while 1:
+        while time.time() < (start + timeout):
             try:
-                return self.get_tx(tx_hash)
-            except grpc.RpcError:
-                if time.time() - start > timeout:
-                    return None
-                time.sleep(pool_period)
+                return self.get_tx(tx_hash=tx_hash)
+            except TransactionNotFound:
+                time.sleep(poll_period)
 
+        raise TransactionTimeout(f"The transaction {tx_hash} couldn't be found on chain within {timeout} seconds.")
     def estimate_gas(self,
                               *,
                               transaction: Transaction,
