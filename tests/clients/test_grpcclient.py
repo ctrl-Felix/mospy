@@ -10,7 +10,7 @@ class TestGRPCClientClass:
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = GRPCClient(host="grpc.cosmos.interbloc.org",
+        client = GRPCClient(host="grpc-cosmoshub.whispernode.com",
                             port=443,
                             ssl=True)
 
@@ -27,7 +27,7 @@ class TestGRPCClientClass:
             next_sequence=0,
         )
 
-        client = GRPCClient(host="grpc.cosmos.interbloc.org",
+        client = GRPCClient(host="grpc-cosmoshub.whispernode.com",
                             port=443,
                             ssl=True)
 

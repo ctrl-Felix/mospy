@@ -5,6 +5,7 @@ from mospy import Account
 from mospy import Transaction
 from mospy.clients import HTTPClient
 
+API = "https://rest-cosmoshub.ecostake.com"
 
 class TestHTTPClientClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
@@ -12,7 +13,7 @@ class TestHTTPClientClass:
     def test_account_data_loading(self):
         account = Account(seed_phrase=self.seed_phrase)
 
-        client = HTTPClient()
+        client = HTTPClient(api=API)
 
         client.load_account_data(account)
 
@@ -27,7 +28,7 @@ class TestHTTPClientClass:
             next_sequence=0,
         )
 
-        client = HTTPClient()
+        client = HTTPClient(api=API)
 
         fee = Coin(denom="uatom", amount="1000")
 
