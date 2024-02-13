@@ -305,6 +305,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mospy.Account.Account.public_key_type" class="md-nav__link">
+    public_key_type
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#mospy.Account.Account.seed_phrase" class="md-nav__link">
     seed_phrase
   </a>
@@ -592,6 +599,13 @@
         <li class="md-nav__item">
   <a href="#mospy.Account.Account.public_key" class="md-nav__link">
     public_key
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mospy.Account.Account.public_key_type" class="md-nav__link">
+    public_key_type
   </a>
   
 </li>
@@ -1048,7 +1062,19 @@
 <span class="normal">296</span>
 <span class="normal">297</span>
 <span class="normal">298</span>
-<span class="normal">299</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Account</span><span class="p">:</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Account</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The account class can be instantiated through a seed or a private key. If nothing is provided it will create a new keyring and the params to work with the cosmos chain</span>
 
@@ -1086,12 +1112,14 @@
         <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosmos&quot;</span><span class="p">,</span>
         <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">protobuf</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosmos&quot;</span><span class="p">,</span>
-        <span class="n">eth</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">eth</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">public_key_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">_protobuf_packages</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;cosmos&quot;</span><span class="p">:</span> <span class="s2">&quot;cosmospy_protobuf&quot;</span><span class="p">,</span>
             <span class="s2">&quot;osmosis&quot;</span><span class="p">:</span> <span class="s2">&quot;osmosis_protobuf&quot;</span><span class="p">,</span>
             <span class="s2">&quot;evmos&quot;</span><span class="p">:</span> <span class="s2">&quot;evmos_protobuf&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sentinel&quot;</span><span class="p">:</span> <span class="s2">&quot;sentinel_protobuf&quot;</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">_protobuf_package</span> <span class="o">=</span> <span class="p">(</span><span class="n">_protobuf_packages</span><span class="p">[</span><span class="n">protobuf</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
                              <span class="k">if</span> <span class="n">protobuf</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">_protobuf_packages</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -1116,6 +1144,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_address_index</span> <span class="o">=</span> <span class="n">address_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_sequence</span> <span class="o">=</span> <span class="n">next_sequence</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_account_number</span> <span class="o">=</span> <span class="n">account_number</span>
+
+        <span class="c1"># Set the public key type</span>
+        <span class="k">if</span> <span class="n">public_key_type</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span> <span class="o">=</span> <span class="n">public_key_type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">eth</span><span class="p">:</span>
+                <span class="c1"># Add Injectiver as exception as they use ethermint but with their own definition</span>
+                <span class="c1"># Otherwise default to ethermint</span>
+                <span class="k">if</span> <span class="n">hrp</span> <span class="o">==</span> <span class="s2">&quot;inj&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span> <span class="o">=</span> <span class="s2">&quot;/injective.crypto.v1beta1.ethsecp256k1.PubKey&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span> <span class="o">=</span> <span class="s2">&quot;/ethermint.crypto.v1.ethsecp256k1.PubKey&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span> <span class="o">=</span> <span class="s2">&quot;/cosmos.crypto.secp256k1.PubKey&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">seed_phrase</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">private_key</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_seed_phrase</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
@@ -1226,8 +1268,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        On-chain account number which will be assigned when the address receives coins for the first time.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            account_number (int): Account Number</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Account number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1241,9 +1281,6 @@
     <span class="k">def</span> <span class="nf">next_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sequence which will be used for transactions signed with this Account.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            next_sequence (int): Next sequence (only when used as setter)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Next Sequence</span>
@@ -1268,8 +1305,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the address index to use a sub account. This works only if a seed has been used to instantiate the Account.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            address_index (int): New address index</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Address Index</span>
@@ -1290,10 +1325,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Current address prefix used by the Account.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            hrp (str): New address prefix</span>
-
-
 <span class="sd">        Returns:</span>
 <span class="sd">            Address Prefix (hrp)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1305,11 +1336,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">slip44</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the Slip44 value. Cosmos defaults to 118</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            slip44 (int): New slip44 value as defined in the [slip44 registry](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Slip44</span>
@@ -1326,9 +1354,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the eth compatibility mode. If you want to use Evmos you will need to set eth to true. Otherwise it defaults to False</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            eth (bool): ETH compatibility mode</span>
-
 <span class="sd">        Returns:</span>
 <span class="sd">            eth</span>
 <span class="sd">          &quot;&quot;&quot;</span>
@@ -1338,6 +1363,19 @@
     <span class="k">def</span> <span class="nf">eth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eth</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_eth</span> <span class="o">=</span> <span class="n">eth</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">public_key_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current pyblic key type</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            public_key_type</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span>
+    <span class="nd">@public_key_type</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">public_key_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">public_key_type</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_public_key_type</span> <span class="o">=</span> <span class="n">public_key_type</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1369,30 +1407,6 @@
   <div class="doc doc-contents ">
   
       <p>On-chain account number which will be assigned when the address receives coins for the first time.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>account_number</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td><p>Account Number</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -1473,30 +1487,6 @@
   
       <p>Change the address index to use a sub account. This works only if a seed has been used to instantiate the Account.</p>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>address_index</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td><p>New address index</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
   <p><strong>Returns:</strong></p>
   <table>
     <thead>
@@ -1535,30 +1525,6 @@
   <div class="doc doc-contents ">
   
       <p>Change the eth compatibility mode. If you want to use Evmos you will need to set eth to true. Otherwise it defaults to False</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>eth</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td><p>ETH compatibility mode</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -1639,30 +1605,6 @@
   
       <p>Current address prefix used by the Account.</p>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>hrp</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>New address prefix</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
   <p><strong>Returns:</strong></p>
   <table>
     <thead>
@@ -1702,30 +1644,6 @@
   <div class="doc doc-contents ">
   
       <p>Sequence which will be used for transactions signed with this Account.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>next_sequence</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td><p>Next sequence (only when used as setter)</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -1830,6 +1748,45 @@
 
 
 
+<h2 id="mospy.Account.Account.public_key_type" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">public_key_type</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the current pyblic key type</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+          </td>
+          <td><p>public_key_type</p></td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h2 id="mospy.Account.Account.seed_phrase" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">seed_phrase</span><span class="p">:</span> <span class="nb">str</span></code>
   
@@ -1882,32 +1839,7 @@
 
   <div class="doc doc-contents ">
   
-      <p>"
-Set the Slip44 value. Cosmos defaults to 118</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>slip44</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td><p>New slip44 value as defined in the <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">slip44 registry</a></p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      <p>Set the Slip44 value. Cosmos defaults to 118</p>
 
   <p><strong>Returns:</strong></p>
   <table>
@@ -1972,14 +1904,14 @@ Set the Slip44 value. Cosmos defaults to 118</p>
 
       <details class="quote">
         <summary>Source code in <code>mospy/Account.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">increase_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">increase_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Increase the sequence by ``change``</span>
 
