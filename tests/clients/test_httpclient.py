@@ -5,7 +5,7 @@ from mospy import Account
 from mospy import Transaction
 from mospy.clients import HTTPClient
 
-API = "https://rest-cosmoshub.ecostake.com"
+API = "https://cosmos-rest.publicnode.com"
 
 class TestHTTPClientClass:
     seed_phrase = "law grab theory better athlete submit awkward hawk state wedding wave monkey audit blame fury wood tag rent furnace exotic jeans drift destroy style"
@@ -29,8 +29,9 @@ class TestHTTPClientClass:
         )
 
         client = HTTPClient(api=API)
+        client.load_account_data(account=account)
 
-        fee = Coin(denom="uatom", amount="1000")
+        fee = Coin(denom="uatom", amount="1500")
 
         tx = Transaction(
             account=account,
@@ -41,24 +42,31 @@ class TestHTTPClientClass:
         tx.add_msg(
             tx_type="transfer",
             sender=account,
-            receipient="cosmos1tkv9rquxr88r7snrg42kxdj9gsnfxxg028kuh9",
+            receipient=account.address,
             amount=1000,
             denom="uatom",
         )
-        copied_transaction = copy.copy(tx)
-        tx_data = client.broadcast_transaction(transaction=copied_transaction)
 
-        assert (
-            tx_data["hash"] ==
-            "54B845AEB1523803D4EAF2330AE5759A83458CB5F0211159D04CC257428503C4")
+        expected_gas = client.estimate_gas(transaction=tx)
 
-        client.load_account_data(account=account)
+        assert expected_gas > 0
 
-        gas_used = client.estimate_gas(
-            transaction=tx,
-            update=False,
+        tx_data = client.broadcast_transaction(transaction=tx)
+
+        assert tx_data["code"] == 0
+
+        transaction_dict = client.wait_for_tx(
+            tx_hash=tx_data["hash"]
         )
 
-
-        assert gas_used > 0
-
+        assert "tx" in transaction_dict and transaction_dict["tx"]["body"]["messages"][0] == {
+            "@type": "/cosmos.bank.v1beta1.MsgSend",
+            "from_address": account.address,
+            "to_address": account.address,
+            "amount": [
+                {
+                    "denom": "uatom",
+                    "amount": "1000"
+                }
+            ]
+        }

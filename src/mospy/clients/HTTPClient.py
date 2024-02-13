@@ -6,7 +6,7 @@ from mospy.Account import Account
 from mospy.Transaction import Transaction
 
 from mospy.exceptions.clients import NodeException
-from src.mospy.exceptions.clients import NodeTimeoutException, TransactionNotFound, TransactionTimeout
+from mospy.exceptions.clients import NodeTimeoutException, TransactionNotFound, TransactionTimeout
 
 
 class HTTPClient:
@@ -17,7 +17,7 @@ class HTTPClient:
         api (str): URL to a Api node
     """
 
-    def __init__(self, *, api: str = "https://api.cosmos.interbloc.org"):
+    def __init__(self, *, api: str = "https://rest.cosmos.directory/cosmoshub"):
         self._api = api
 
     def _make_post_request(self, path, payload, timeout):
@@ -166,7 +166,7 @@ class HTTPClient:
         return data
 
 
-    def wait_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
+    def wait_for_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
         """
         Waits for a transaction hash to hit the chain.
 

@@ -7,7 +7,7 @@ from google.protobuf.json_format import MessageToDict
 from mospy.Account import Account
 from mospy.Transaction import Transaction
 
-from src.mospy.exceptions.clients import TransactionNotFound, TransactionTimeout
+from mospy.exceptions.clients import TransactionNotFound, TransactionTimeout
 
 
 class GRPCClient:
@@ -156,7 +156,7 @@ class GRPCClient:
         except grpc.RpcError:
             raise TransactionNotFound(f"The transaction {tx_hash} couldn't be found on chain.")
 
-    def wait_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
+    def wait_for_tx(self, *, tx_hash: str, timeout: float = 60, poll_period: float = 10):
         """
         Waits for a transaction hash to hit the chain.
 
