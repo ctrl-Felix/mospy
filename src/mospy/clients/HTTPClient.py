@@ -6,7 +6,7 @@ from mospy.Account import Account
 from mospy.Transaction import Transaction
 
 from mospy.exceptions.clients import NodeException
-from mospy.exceptions.clients import NodeTimeoutException, TransactionNotFound, TransactionTimeout
+from mospy.exceptions.clients import NodeTimeoutException, TransactionNotFound, TransactionTimeout, NotAnApiNode
 
 
 class HTTPClient:
@@ -15,10 +15,33 @@ class HTTPClient:
 
     Args:
         api (str): URL to a Api node
+        check_api (bool): Check if the Api node is reachable. Returns either NotAnApiNode or NodeException if the node is not healthy.
     """
 
-    def __init__(self, *, api: str = "https://rest.cosmos.directory/cosmoshub"):
-        self._api = api
+    def __init__(self, *, api: str = "https://rest.cosmos.directory/cosmoshub", check_api: bool = False):
+        self._api = api.rstrip("/")
+
+        # Check API if reachable
+        if check_api:
+            self.check_api()
+
+    def check_api(self):
+        """
+        Checks if the API is reachable. Returns a NodeException or a NotAnApiNode Exception when the check failed.
+        """
+        try:
+            check_response = httpx.get(self._api + "/node_info")
+        except httpx.HTTPError:
+            raise NodeException(
+                "The passed url is not reachable. To disable the health check pass check_api=false to the HTTPClient constructor.")
+
+        if check_response.status_code != 200:
+            # Check if the returned text matches the one returned by an RPC
+            if "404 page not found" in check_response.text:
+                raise NotAnApiNode("Please pass an API endpoint to the HTTPClient. You probably passed an RPC.")
+            else:
+                raise NodeException(
+                    "Health couldn't be verified. To disable the health check pass check_api=false to the HTTPClient constructor.")
 
     def _make_post_request(self, path, payload, timeout):
         try:

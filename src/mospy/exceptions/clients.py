@@ -13,3 +13,6 @@ class TransactionTimeout(Exception):
 class TransactionNotFound(Exception):
     """Raised when the transaction couldn't be found on chain."""
     pass
+
+class NotAnApiNode(Exception):
+    """The url passed to the constructor couldn't be detected as API node. This might be because you passed the rpc endpoint instead."""

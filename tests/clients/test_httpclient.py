@@ -5,6 +5,8 @@ from mospy import Account
 from mospy import Transaction
 from mospy.clients import HTTPClient
 
+from mospy.exceptions.clients import NotAnApiNode, NodeException
+
 API = "https://cosmos-rest.publicnode.com"
 
 class TestHTTPClientClass:
@@ -20,6 +22,23 @@ class TestHTTPClientClass:
         assert account.account_number == 1257460
 
         assert account.next_sequence >= 0
+
+    def test_node_health_check(self):
+        try:
+            client = HTTPClient(api="https://cosmos-rpc.publicnode.com", check_api=True)
+        except NotAnApiNode:
+            assert True
+        else:
+            assert False
+
+        try:
+            client = HTTPClient(api="https://dead-url-awdbnawdbauiowd.com", check_api=True)
+        except NodeException:
+            assert True
+        else:
+            assert False
+
+        client = HTTPClient(api="https://dead-url-awdbnawdbauiowd.com", check_api=False)
 
     def test_transaction_submitting(self):
         account = Account(
