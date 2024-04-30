@@ -8,3 +8,4 @@ mnemonic==0.20
 protobuf==4.22.1
 safe-pysha3==1.0.3;python_version>='3.9'
 pysha3==1.0.2;python_version<'3.9'
+pycryptodome==3.20.0
