@@ -453,6 +453,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#custom-message-from-dict" class="md-nav__link">
+    Custom Message From Dict
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -531,6 +538,13 @@
         <li class="md-nav__item">
   <a href="#ethereumethermint-transaction" class="md-nav__link">
     Ethereum/Ethermint Transaction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-message-from-dict" class="md-nav__link">
+    Custom Message From Dict
   </a>
   
 </li>
@@ -689,6 +703,40 @@ tx.add_msg(
 
 client = HTTPClient(api=&quot;https://api.evmos.interbloc.org&quot;)
 tx_response = client.broadcast_transaction(transaction=tx)
+</code></pre>
+<h2 id="custom-message-from-dict">Custom Message From Dict</h2>
+<p>You can add your own messages for unsupported chains by using a dictionary.</p>
+<pre><code class="language-python">account = Account(
+    seed_phrase=&quot;&quot;,
+    hrp='elys'
+)
+tx = Transaction(
+    account=account,
+    chain_id='elystestnet-1',
+    gas=800000,
+)
+
+
+msg = {
+    &quot;creator&quot;: account.address,
+    &quot;amount&quot;: &quot;1000&quot;
+}
+
+
+tx.add_dict_msg(msg, type_url=&quot;/elys.stablestake.MsgBond&quot;)
+
+client = HTTPClient(
+    api=&quot;https://api.testnet.elys.network&quot;
+)
+
+tx.set_fee(
+    amount=100,
+    denom=&quot;uelys&quot;
+)
+
+client.load_account_data(account=account)
+response = client.broadcast_transaction(transaction=tx)
+
 </code></pre>
 
 
