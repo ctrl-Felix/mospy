@@ -6,6 +6,7 @@ import bech32
 from mnemonic import Mnemonic
 from sha3 import keccak_256
 import binascii
+from Crypto.Hash.RIPEMD160 import new as ripemd160_new
 
 
 def seed_to_private_key(seed, derivation_path, passphrase: str = ""):
@@ -26,7 +27,9 @@ def privkey_to_pubkey(privkey: bytes, raw: bool = False) -> bytes:
 
 def pubkey_to_address(pubkey: bytes, *, hrp: str) -> str:
     s = hashlib.new("sha256", pubkey).digest()
-    r = hashlib.new("ripemd160", s).digest()
+    ripemd160 = ripemd160_new()
+    ripemd160.update(s)
+    r = ripemd160.digest()
     five_bit_r = bech32.convertbits(r, 8, 5)
     assert five_bit_r is not None, "Unsuccessful bech32.convertbits call"
     return bech32.bech32_encode(hrp, five_bit_r)
