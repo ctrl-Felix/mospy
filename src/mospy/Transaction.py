@@ -102,6 +102,7 @@ class Transaction:
     def add_dict_msg(self, msg_dict: dict, type_url: str) -> None:
         """
         Add a message as dictionary to the tx body manually.
+        Note: The message keys and value types must exactly match those defined in the chain's source code.
 
         Args:
             msg_dict: Transaction dict
