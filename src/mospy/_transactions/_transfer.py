@@ -11,7 +11,7 @@ class Transaction:
         self,
         protobuf_package: str,
         sender: Account,
-        receipient: str,
+        recipient: str,
         amount: int,
         denom: str,
     ):
@@ -30,12 +30,12 @@ class Transaction:
         _tx_coin.amount = str(amount)
         self._amount = _tx_coin
         self._sender = sender.address
-        self._receipient = receipient
+        self._recipient = recipient
 
     def format(self) -> (str, object):
         msg = self._tx_pb2.MsgSend(
             from_address=self._sender,
-            to_address=self._receipient,
+            to_address=self._recipient,
         )
         msg.amount.append(self._amount)
 

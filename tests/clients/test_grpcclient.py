@@ -45,7 +45,7 @@ class TestGRPCClientClass:
         tx.add_msg(
             tx_type="transfer",
             sender=account,
-            receipient=account.address,
+            recipient=account.address,
             amount=1000,
             denom="uatom",
         )

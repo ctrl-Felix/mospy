@@ -28,7 +28,7 @@ tx.set_fee(
 tx.add_msg(
     tx_type="transfer",
     sender=account,
-    receipient=account.address,
+    recipient=account.address,
     amount=3500000000000000,
     denom="aevmos",
 )

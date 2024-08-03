@@ -5,8 +5,10 @@ import importlib
 import ecdsa
 from sha3 import keccak_256
 from google.protobuf import any_pb2 as any
+
 from mospy._transactions import ALL_TRANSACTION_HELPERS
 from mospy.Account import Account
+from mospy.protobuf.GenericProtobuf import GenericProtobuf
 
 built_in_transactions = {}
 for transaction_adapter in ALL_TRANSACTION_HELPERS:
@@ -97,6 +99,26 @@ class Transaction:
         msg_any.type_url = type_url
         self._tx_body.messages.append(msg_any)
 
+    def add_dict_msg(self, msg_dict: dict, type_url: str) -> None:
+        """
+        Add a message as dictionary to the tx body manually.
+
+        Args:
+            msg_dict: Transaction dict
+            type_url: Type url for the transaction
+        """
+        generic_proto = GenericProtobuf()
+        msg_any = generic_proto.create_any_message(type_url=type_url, msg_dict=msg_dict)
+        self._tx_body.messages.append(msg_any)
+
+    def add_send_msg(self, recipient: str, amount: int, denom: str = "uatom") -> None:
+        self.add_msg(
+            tx_type="transfer",
+            sender=self._account,
+            recipient=recipient,
+            amount=amount,
+            denom=denom,
+        )
     def set_fee(self, amount: int, denom: str = "uatom"):
         """
         Set the fee manually
