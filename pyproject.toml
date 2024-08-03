@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mospy-wallet"
-version = "0.5.4"
+version = "0.5.5"
 description = "This package is a fork of cosmospy and is a light framework for the cosmos ecosystem"
 authors = [
     { name = "ctrl-felix", email = "dev@ctrl-felix.de" },
@@ -27,6 +27,7 @@ dependencies = [
     "hdwallets>=0.1.2",
     "safe-pysha3>=1.0.3;python_version>='3.9'",
     "pysha3==1.0.2;python_version<'3.9'",
+    "pycryptodome>=3.20.0"
 ]
 dynamic = []
 

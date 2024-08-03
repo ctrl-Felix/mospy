@@ -52,8 +52,9 @@ class HTTPClient:
         if req.status_code != 200:
             try:
                 data = req.json()
+                print(data)
                 message = f"({data['message']}"
-            except:
+            except Exception:
                 message = ""
             raise NodeException(f"Error while doing request to api endpoint {message}")
 

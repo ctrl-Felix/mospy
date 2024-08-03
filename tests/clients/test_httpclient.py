@@ -55,7 +55,7 @@ class TestHTTPClientClass:
         tx = Transaction(
             account=account,
             fee=fee,
-            gas=10000000000,
+            gas=100000,
         )
 
         tx.add_msg(
