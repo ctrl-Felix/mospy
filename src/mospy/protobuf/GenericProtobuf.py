@@ -42,7 +42,7 @@ class GenericProtobuf:
                 field_descriptor.label = descriptor_pb2.FieldDescriptorProto.LABEL_REPEATED
             elif isinstance(field_value, dict):
                 nested_type_name = f"{type_name}_{field_name}"
-                self.create_message_type(nested_type_name, field_value[0])
+                self.create_message_type(nested_type_name, field_value)
                 field_descriptor.type = descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE
                 field_descriptor.type_name = f"{nested_type_name}"
 
